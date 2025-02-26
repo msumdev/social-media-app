@@ -1,0 +1,37 @@
+ARG PHP_EXTS="mbstring pdo_mysql zip exif pcntl gd"
+ARG PHP_PECL_EXTS="redis yaml xdebug"
+
+FROM php:8.3.6-fpm-bullseye as meetzy_backend
+
+ARG PHP_EXTS
+ARG PHP_PECL_EXTS
+
+RUN mkdir -p /opt/meetzy /opt/meetzy/bin
+
+WORKDIR /opt/meetzy
+
+RUN addgroup --system --gid 1000 meetzy
+RUN adduser --system -uid 1000 --gid 1000 --home /opt/meetzy --disabled-login meetzy
+
+RUN chown -R meetzy /opt/meetzy \
+    && apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install ${PHPIZE_DEPS} build-essential libyaml-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev locales zip jpegoptim optipng pngquant gifsicle unzip curl lua-zlib-dev libonig-dev libzip-dev python3-pip nano htop  -y
+
+RUN pip install supervisor
+
+RUN docker-php-ext-install -j$(nproc) ${PHP_EXTS} && \
+    pecl install ${PHP_PECL_EXTS} && \
+    docker-php-ext-enable ${PHP_PECL_EXTS} ${PHP_EXTS}
+
+RUN apt-get install -y autoconf pkg-config libssl-dev && \
+    pecl install mongodb && \
+    docker-php-ext-enable mongodb
+
+ADD .docker/php/php.ini /usr/local/etc/php/php.ini
+
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+USER meetzy
+
+FROM node:latest as meetzy_frontend
