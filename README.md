@@ -4,4 +4,4 @@ The motivation for starting this project is that I'm done with social media. I d
 
 I want social media to encourage the social part, something that should be important. Meet new people, speak about different things. Share your life, build a life. Social first.
 
-# This is a work in progress. I maintain the source code to this on my private gitlab instance. I'm actively tidyng things up in this project and will sync it over shortly
+# This is a work in progress. I maintain the source code to this on my private gitlab instance. I'm actively tidying things up in this project and will sync it over shortly
