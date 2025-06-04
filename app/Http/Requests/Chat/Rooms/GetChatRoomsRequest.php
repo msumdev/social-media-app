@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class GetChatRoomsRequest
- * @package App\Http\Requests\Chat\Rooms
  */
 class GetChatRoomsRequest extends BaseRequest
 {

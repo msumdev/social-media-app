@@ -15,12 +15,12 @@ class Sex extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'code'
+        'label',
+        'value',
     ];
 
     /**
-     * @var bool $timestamps
+     * @var bool
      */
     public $timestamps = false;
 }

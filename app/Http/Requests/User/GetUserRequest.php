@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class GetUserRequest
- * @package App\Http\Requests\User
  */
 class GetUserRequest extends BaseRequest
 {

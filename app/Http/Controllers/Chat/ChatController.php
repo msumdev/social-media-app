@@ -10,22 +10,14 @@ use Inertia\Response;
 
 class ChatController extends Controller
 {
-    public function __construct(private readonly ChatService $chatService)
-    {
+    public function __construct(private readonly ChatService $chatService) {}
 
-    }
-
-    /**
-     * @param ChatIndexRequest $request
-     * @return \Inertia\Response
-     */
     public function index(ChatIndexRequest $request): Response
     {
         return $this->chatService->index($request);
     }
 
     /**
-     * @param CreateChatRequest $request
      * @return mixed
      */
     public function create(CreateChatRequest $request)

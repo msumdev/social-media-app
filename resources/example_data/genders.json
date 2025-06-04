@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Male"
+    },
+    {
+        "name": "Female"
+    },
+    {
+        "name": "Non-binary"
+    },
+    {
+        "name": "Genderqueer"
+    },
+    {
+        "name": "Transgender"
+    },
+    {
+        "name": "Genderfluid"
+    },
+    {
+        "name": "Agender"
+    },
+    {
+        "name": "Bigender"
+    },
+    {
+        "name": "Androgynous"
+    },
+    {
+        "name": "Two-Spirit"
+    }
+]

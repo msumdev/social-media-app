@@ -17,16 +17,16 @@ class RoomMessageCount extends Model
     protected $fillable = [
         'user_id',
         'room_id',
-        'count'
+        'count',
     ];
 
     /**
-     * @var string[] $hidden
+     * @var string[]
      */
     protected $hidden = [];
 
     /**
-     * @var string[] $with
+     * @var string[]
      */
     protected $with = [];
 }

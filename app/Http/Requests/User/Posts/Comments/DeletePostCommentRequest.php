@@ -8,7 +8,6 @@ use App\Models\Posts\PostComment;
 
 /**
  * Class DeletePostCommentRequest
- * @package App\Http\Requests\User\Posts
  */
 class DeletePostCommentRequest extends BaseRequest
 {
@@ -31,21 +30,25 @@ class DeletePostCommentRequest extends BaseRequest
             'id' => [
                 'required',
                 'string',
-                function($attribute, $value, $fail) {
-                    if (!Post::where('_id', $value)->exists()) {
+                function ($attribute, $value, $fail) {
+                    if (! Post::where('_id', $value)->exists()) {
                         $fail('The post does not exist.');
                     }
-                }
+
+                    if (! Post::where('user_id', auth()->id())->exists()) {
+                        $fail('This post does not belong to you.');
+                    }
+                },
             ],
             'comment_id' => [
                 'required',
                 'string',
-                function($attribute, $value, $fail) {
-                    if (!PostComment::where('_id', $value)->exists()) {
+                function ($attribute, $value, $fail) {
+                    if (! PostComment::where('_id', $value)->exists()) {
                         $fail('The comment does not exist.');
                     }
-                }
-            ]
+                },
+            ],
         ];
     }
 }

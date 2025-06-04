@@ -2,13 +2,11 @@
 
 namespace App\Http\Requests\Authentication;
 
-use App\Http\Requests\BaseRequest;
+use App\Models\User\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Class ResetPasswordRequest
- * @package App\Http\Requests\Authentication
  */
 class ResetPasswordRequest extends FormRequest
 {

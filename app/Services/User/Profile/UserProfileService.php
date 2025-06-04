@@ -2,52 +2,73 @@
 
 namespace App\Services\User\Profile;
 
-use App\Http\Requests\User\BlockUserRequest;
-use App\Http\Requests\User\GetUserListRequest;
-use App\Http\Requests\User\GetUserRequest;
 use App\Http\Requests\User\Profile\GetUserProfileRequest;
 use App\Models\AppLog;
+use App\Models\Session;
 use App\Models\User\BlockedUser;
 use App\Models\User\User;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
 /**
  * Class UserProfileService
- * @package App\Services\User\Profile
  */
 class UserProfileService
 {
-    /**
-     * @param GetUserProfileRequest $request
-     * @return Response|JsonResponse
-     */
-    public function index(GetUserProfileRequest $request): Response|JsonResponse
+    public function index(GetUserProfileRequest $request): RedirectResponse|Response|JsonResponse
     {
         $profile = User::where('username', $request->username)->first();
-        $user = $request->user();
 
-        if ($profile->id != $user->id) {
-            AppLog::create([
-                'user' => $user->id,
-                'profile' => $profile->id,
-                'ip_address' => $request->ip(),
-                'user_agent' => $request->userAgent(),
-                'type' => AppLog::PROFILE_VIEW
-            ]);
+        if (! $profile) {
+            Session::flash('error', 'Oh heck! I can\'t find this user!');
+
+            return redirect()->route('home');
         }
 
-        if ($request->get('json')) {
+        $currentUser = $request->user();
+        $ipAddress = $request->ip();
+        $userAgent = $request->userAgent();
+
+        $this->logProfileVisit($currentUser, $profile, $ipAddress, $userAgent);
+
+        if ($request->input('json')) {
             return response()->json([
-                'user' => $user,
-                'profile' => $profile
+                'user' => $currentUser,
+                'profile' => $profile,
             ]);
         }
 
         return Inertia::render('Profile/Index', [
-            'username' => $request->username
+            'username' => $request->username,
         ]);
+    }
+
+    protected function logProfileVisit(User $viewed, User $viewer, string $ipAddress, string $userAgent): bool
+    {
+        if ($viewer->id === $viewed->id) {
+            return false;
+        }
+
+        AppLog::create([
+            'viewer_id' => $viewer->id,
+            'viewed_id' => $viewed->id,
+            'ip_address' => $ipAddress,
+            'user_agent' => $userAgent,
+            'type' => AppLog::PROFILE_VIEW,
+        ]);
+
+        return true;
+    }
+
+    public function toggleBlockUser(User $user, User $blockedUser): void
+    {
+        if (! $user->hasBlocked($blockedUser)) {
+            BlockedUser::create([
+                'user_id' => $user->id,
+                'blocked_user_id' => $blockedUser->id
+            ]);
+        }
     }
 }

@@ -1,15 +1,14 @@
 <?php
 
-
 use App\Models\Posts\Post;
 use App\Models\ReportReason;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User\User;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class PostReportTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseMigrations;
 
     public function test_verify_unauthenticated_user_cannot_report_a_post(): void
     {
@@ -78,7 +77,8 @@ class PostReportTest extends TestCase
     }
 
     public function test_a_user_cannot_report_the_same_post_more_than_once(): void
-    {$user = User::factory()->create();
+    {
+        $user = User::factory()->create();
         $post = Post::factory()->create(['user_id' => $user->id]);
         $reasons = ReportReason::factory()->count(3)->create()->pluck('id')->toArray();
         $description = fake()->sentence();

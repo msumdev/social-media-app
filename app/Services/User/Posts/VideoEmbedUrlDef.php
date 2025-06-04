@@ -10,7 +10,7 @@ class VideoEmbedUrlDef extends HTMLPurifier_AttrDef_URI
     {
         $regexp = $config->get('URI.SafeIframeRegexp');
         if ($regexp !== null) {
-            if (!preg_match($regexp, $uri)) {
+            if (! preg_match($regexp, $uri)) {
                 return false;
             }
         }

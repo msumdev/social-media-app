@@ -7,7 +7,6 @@ use App\Models\Posts\Post;
 
 /**
  * Class CreatePostCommentRequest
- * @package App\Http\Requests\User\Posts
  */
 class CreatePostCommentRequest extends BaseRequest
 {
@@ -30,17 +29,18 @@ class CreatePostCommentRequest extends BaseRequest
             'id' => [
                 'required',
                 'string',
-                function($attribute, $value, $fail) {
-                    if (!Post::where('_id', $value)->exists()) {
+                function ($attribute, $value, $fail) {
+                    if (! Post::where('_id', $value)->exists()) {
                         $fail('The post does not exist.');
                     }
-                }
+                },
             ],
-            'content' => 'required|string|max:2048',
-            'audios' => 'sometimes|array',
-            'audios.*.data' => 'required|file|mimes:mp3,wav,ogg|max:51200',
+            'text' => 'required|string',
+            'html' => 'required|string',
             'mentions' => 'sometimes|array',
             'hashtags' => 'sometimes|array',
+            'audios' => 'sometimes|array',
+            'audios.*.data' => 'required|file|mimes:mp3,wav,ogg|max:51200',
         ];
     }
 }

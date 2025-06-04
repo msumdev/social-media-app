@@ -3,11 +3,9 @@
 namespace App\Http\Requests\Chat\Rooms;
 
 use App\Http\Requests\BaseRequest;
-use Illuminate\Validation\Rule;
 
 /**
  * Class CreateChatRoomRequest
- * @package App\Http\Requests\Chat\Rooms
  */
 class CreateChatRoomRequest extends BaseRequest
 {

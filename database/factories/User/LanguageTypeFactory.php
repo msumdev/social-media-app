@@ -2,8 +2,6 @@
 
 namespace Database\Factories\User;
 
-use App\Models\User\InterestType;
-use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\File;
 
@@ -19,11 +17,12 @@ class LanguageTypeFactory extends Factory
      */
     public function definition(): array
     {
-        $types = json_decode(File::get(database_path('data/languages.json')), true);
+        $types = json_decode(File::get(resource_path('example_data/languages.json')), true);
+        $randomType = array_rand($types, 1);
 
         return [
-            'name' => $types[0]['name'],
-            'code' => $types[0]['code']
+            'name' => $types[$randomType]['name'],
+            'code' => $types[$randomType]['code'],
         ];
     }
 }

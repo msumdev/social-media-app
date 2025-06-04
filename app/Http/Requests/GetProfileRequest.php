@@ -2,13 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\BaseRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 /**
  * Class GetProfileRequest
- * @package App\Http\Requests\User
  */
 class GetProfileRequest extends BaseRequest
 {
@@ -28,14 +26,12 @@ class GetProfileRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|string|exists:users,username'
+            'username' => 'required|string|exists:users,username',
         ];
     }
 
     /**
      * Handle a failed validation attempt.
-     *
-     * @param Validator $validator
      */
     protected function failedValidation(Validator $validator)
     {

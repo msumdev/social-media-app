@@ -5,8 +5,6 @@ namespace Database\Factories;
 use App\Models\Asset;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User\User>
@@ -33,9 +31,6 @@ class AssetFactory extends Factory
         ];
     }
 
-    /**
-     * @return AssetFactory
-     */
     public function post_image(): AssetFactory
     {
         return $this->state(function (array $attributes) {
@@ -45,9 +40,6 @@ class AssetFactory extends Factory
         });
     }
 
-    /**
-     * @return AssetFactory
-     */
     public function post_audio(): AssetFactory
     {
         return $this->state(function (array $attributes) {
@@ -57,9 +49,6 @@ class AssetFactory extends Factory
         });
     }
 
-    /**
-     * @return AssetFactory
-     */
     public function profile_picture(): AssetFactory
     {
         return $this->state(function (array $attributes) {
@@ -70,9 +59,6 @@ class AssetFactory extends Factory
         });
     }
 
-    /**
-     * @return AssetFactory
-     */
     public function post_comment_audio(): AssetFactory
     {
         return $this->state(function (array $attributes) {
@@ -82,9 +68,6 @@ class AssetFactory extends Factory
         });
     }
 
-    /**
-     * @return AssetFactory
-     */
     public function profile_comment_audio(): AssetFactory
     {
         return $this->state(function (array $attributes) {

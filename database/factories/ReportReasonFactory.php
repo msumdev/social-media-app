@@ -26,7 +26,7 @@ class ReportReasonFactory extends Factory
             'Privacy Violation',
             'Scam or Fraud',
             'Violence or Threat',
-            'Other'
+            'Other',
         ];
 
         return [

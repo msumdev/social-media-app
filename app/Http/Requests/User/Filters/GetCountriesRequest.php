@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class GetCountriesRequest
- * @package App\Http\Requests\User\Filters
  */
 class GetCountriesRequest extends BaseRequest
 {

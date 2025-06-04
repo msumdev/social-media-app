@@ -17,7 +17,7 @@ class PostCommentDislike extends Model
      */
     protected $fillable = [
         'post_comment_id',
-        'user_id'
+        'user_id',
     ];
 
     /**

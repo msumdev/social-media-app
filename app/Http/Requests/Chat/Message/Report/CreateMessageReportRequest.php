@@ -7,7 +7,6 @@ use App\Models\Room\RoomMessage;
 
 /**
  * Class CreateMessageReportRequest
- * @package App\Http\Requests\Chat\Message\Report
  */
 class CreateMessageReportRequest extends BaseRequest
 {
@@ -31,11 +30,12 @@ class CreateMessageReportRequest extends BaseRequest
             'message_id' => [
                 'required',
                 'string',
-                function($attribute, $value, $fail) {
+                function ($attribute, $value, $fail) {
                     $message = RoomMessage::find($value);
 
-                    if (!$message) {
+                    if (! $message) {
                         $fail('The message does not exist.');
+
                         return;
                     }
 
@@ -43,14 +43,16 @@ class CreateMessageReportRequest extends BaseRequest
 
                     if ($message->user->id === auth()->id()) {
                         $fail('You cannot report your own message.');
+
                         return;
                     }
 
                     if ($messageReport) {
                         $fail('You have already reported this message.');
+
                         return;
                     }
-                }
+                },
             ],
             'reasons' => 'required|array|exists:report_reasons,id',
             'description' => 'nullable|string|max:255',

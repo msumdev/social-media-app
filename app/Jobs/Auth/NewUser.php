@@ -32,10 +32,13 @@ class NewUser implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::info('New user registered: '.$this->user->username);
+
         $this->user->token = Str::random(32);
         $this->user->last_registration_email_sent_at = now();
         $this->user->save();
 
-        Mail::to($this->user->email)->send(new RegistrationConfirmation($this->user));
+        Mail::to($this->user->email)
+            ->send(new RegistrationConfirmation($this->user));
     }
 }

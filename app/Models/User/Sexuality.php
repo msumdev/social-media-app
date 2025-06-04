@@ -16,11 +16,11 @@ class Sexuality extends Model
      */
     protected $fillable = [
         'sexuality_type_id',
-        'user_id'
+        'user_id',
     ];
 
     /**
-     * @var bool $timestamps
+     * @var bool
      */
     public $timestamps = false;
 }

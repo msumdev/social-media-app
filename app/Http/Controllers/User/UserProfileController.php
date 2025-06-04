@@ -10,15 +10,8 @@ use Inertia\Response;
 
 class UserProfileController extends Controller
 {
-    public function __construct(private readonly UserProfileService $userProfileService)
-    {
+    public function __construct(private readonly UserProfileService $userProfileService) {}
 
-    }
-
-    /**
-     * @param GetUserProfileRequest $request
-     * @return Response|JsonResponse
-     */
     public function index(GetUserProfileRequest $request): Response|JsonResponse
     {
         return $this->userProfileService->index($request);

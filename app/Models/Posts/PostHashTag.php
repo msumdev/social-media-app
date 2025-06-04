@@ -2,7 +2,6 @@
 
 namespace App\Models\Posts;
 
-use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +16,6 @@ class PostHashTag extends Model
      */
     protected $fillable = [
         'post_id',
-        'hashtag_id'
+        'hashtag_id',
     ];
 }

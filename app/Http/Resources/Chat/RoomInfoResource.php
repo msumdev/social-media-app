@@ -5,7 +5,6 @@ namespace App\Http\Resources\Chat;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Redis;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class RoomInfoResource extends JsonResource
 {
@@ -22,8 +21,8 @@ class RoomInfoResource extends JsonResource
             ->filter(function ($member) use ($roomId) {
                 $permissions = $member->getAllPermissions();
 
-                return $permissions->contains('name', 'room.moderator.' . $roomId) &&
-                    !$permissions->contains('name', 'room.owner.' . $roomId);
+                return $permissions->contains('name', 'room.moderator.'.$roomId) &&
+                    ! $permissions->contains('name', 'room.owner.'.$roomId);
             })
             ->map(function ($member) {
                 return [
@@ -32,7 +31,7 @@ class RoomInfoResource extends JsonResource
                     'name' => $member->first_name,
                     'age' => $member->age,
                     'profile_picture' => $member->profile_picture->url,
-                    'online' => Redis::get('user-count:' . $member->id) !== null,
+                    'online' => Redis::get('user-count:'.$member->id) !== null,
                 ];
             })
             ->values();
@@ -41,7 +40,7 @@ class RoomInfoResource extends JsonResource
             ->filter(function ($member) use ($roomId) {
                 $permissions = $member->getAllPermissions();
 
-                return $permissions->contains('name', 'room.owner.' . $roomId);
+                return $permissions->contains('name', 'room.owner.'.$roomId);
             })
             ->map(function ($member) {
                 return [
@@ -50,7 +49,7 @@ class RoomInfoResource extends JsonResource
                     'name' => $member->first_name,
                     'age' => $member->age,
                     'profile_picture' => $member->profile_picture->url,
-                    'online' => Redis::get('user-count:' . $member->id) !== null,
+                    'online' => Redis::get('user-count:'.$member->id) !== null,
                 ];
             })
             ->values();

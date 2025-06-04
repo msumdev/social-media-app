@@ -2,7 +2,6 @@
 
 namespace App\Services\Chat\Room;
 
-use App\Http\Requests\Chat\Message\CreateMessageRequest;
 use App\Http\Requests\Chat\Message\DeleteMessageRequest;
 use App\Http\Requests\Chat\Message\GetMessageRequest;
 use App\Http\Resources\Chat\Room\Message\RoomMessageResource;
@@ -10,23 +9,18 @@ use App\Models\Room\Room;
 use App\Models\Room\RoomMessage;
 use App\Models\Room\RoomMessageCount;
 use App\Models\User\User;
+use App\Traits\RedisWebsocketTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Redis;
-use App\Traits\RedisWebsocketTrait;
 
 /**
  * Class RoomMessageService
- * @package App\Services\Chat
  */
 class RoomMessageService
 {
     use RedisWebsocketTrait;
 
-    /**
-     * @param GetMessageRequest $request
-     * @return AnonymousResourceCollection
-     */
     public function index(GetMessageRequest $request): AnonymousResourceCollection
     {
         $roomId = intval($request->id);
@@ -38,12 +32,6 @@ class RoomMessageService
         );
     }
 
-    /**
-     * @param User $user
-     * @param int $roomId
-     * @param string $content
-     * @return RoomMessageResource
-     */
     public function create(User $user, int $roomId, string $content): RoomMessageResource
     {
         $message = RoomMessage::create([
@@ -53,10 +41,10 @@ class RoomMessageService
         ]);
 
         $resource = new RoomMessageResource($message);
-        $usersToNotify = $this->getUsersToNotify(
+        $usersToNotify = $this->getUserIdsFromRoom(
             $message->room_id,
             [
-                $user->id
+                $user->id,
             ]
         );
         $this->notify($usersToNotify, 'room:new-message', $resource);
@@ -65,11 +53,11 @@ class RoomMessageService
             ->where('user_id', $user->id)
             ->first();
 
-        if (!$messageCount) {
+        if (! $messageCount) {
             RoomMessageCount::create([
                 'room_id' => $roomId,
                 'user_id' => $user->id,
-                'count' => 1
+                'count' => 1,
             ]);
         } else {
             $messageCount->increment('count');
@@ -80,25 +68,21 @@ class RoomMessageService
         return $resource;
     }
 
-    /**
-     * @param DeleteMessageRequest $request
-     * @return JsonResponse
-     */
     public function delete(DeleteMessageRequest $request): JsonResponse
     {
         $message = RoomMessage::where('id', $request->message_id)
             ->first();
 
-        $usersToNotify = $this->getUsersToNotify(
+        $usersToNotify = $this->getUserIdsFromRoom(
             $message->room_id,
             [
-                auth()->id()
+                auth()->id(),
             ]
         );
 
         $this->notify($usersToNotify, 'room:message-deleted', [
             'room_id' => $message->room_id,
-            'message_id' => $message->id
+            'message_id' => $message->id,
         ]);
 
         $message->delete();
@@ -106,12 +90,6 @@ class RoomMessageService
         return response()->json(['message' => 'Message deleted'], 200);
     }
 
-    /**
-     * @param Room $room
-     * @param RoomMessage $message
-     * @param int $userId
-     * @return void
-     */
     public function notifyUserOfPurge(Room $room, RoomMessage $message, int $userId): void
     {
         $payload = json_encode([
@@ -119,8 +97,8 @@ class RoomMessageService
             'userId' => $userId,
             'message' => [
                 'room_id' => $room->id,
-                'message_id' => $message->id
-            ]
+                'message_id' => $message->id,
+            ],
         ]);
 
         Redis::publish('main_subscriber_channel', $payload);

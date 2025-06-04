@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class GetUserProfileAccessLogsRequest
- * @package App\Http\Requests\User\Logs
  */
 class GetUserProfileAccessLogsRequest extends BaseRequest
 {

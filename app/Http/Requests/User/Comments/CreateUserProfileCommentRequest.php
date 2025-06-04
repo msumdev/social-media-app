@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class CreateUserProfileCommentRequest
- * @package App\Http\Requests\User\Comments
  */
 class CreateUserProfileCommentRequest extends BaseRequest
 {

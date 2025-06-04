@@ -17,11 +17,11 @@ class SexFactory extends Factory
      */
     public function definition(): array
     {
-        $sexes = json_decode(File::get(database_path('data/sexes.json')), true);
+        $sexes = json_decode(File::get(resource_path('example_data/sexes.json')), true);
 
         return [
-            'name' => $sexes[0]['name'],
-            'code' => $sexes[0]['code']
+            'label' => $sexes[0]['label'],
+            'value' => $sexes[0]['value'],
         ];
     }
 }

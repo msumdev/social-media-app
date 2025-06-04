@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class GetSearchSettingsRequest
- * @package App\Http\Requests\User\Filters
  */
 class GetSearchSettingsRequest extends BaseRequest
 {

@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class GetLanguagesRequest
- * @package App\Http\Requests\User\Languages
  */
 class GetLanguagesRequest extends BaseRequest
 {

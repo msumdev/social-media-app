@@ -14,18 +14,9 @@ class Asset extends Model
     use HasFactory;
 
     /**
-     * @var string $connection
+     * @var string
      */
     protected $connection = 'mongodb';
-
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-
-        if (app()->runningUnitTests()) {
-            $this->connection = 'mongodb_testing';
-        }
-    }
 
     /**
      * @var string IMAGE
@@ -35,7 +26,7 @@ class Asset extends Model
     /**
      * @var string AUDIO
      */
-    const POST_AUDIO = 'post-audios';
+    const POST_AUDIO = 'post-audio';
 
     /**
      * @var string PROFILE_PICTURE
@@ -45,12 +36,12 @@ class Asset extends Model
     /**
      * @var string POST_COMMENT_AUDIO
      */
-    const POST_COMMENT_AUDIO = 'post-comment-audios';
+    const POST_COMMENT_AUDIO = 'post-comment-audio';
 
     /**
      * @var string PROFILE_COMMENT_AUDIO
      */
-    const PROFILE_COMMENT_AUDIO = 'profile-comment-audios';
+    const PROFILE_COMMENT_AUDIO = 'profile-comment-audio';
 
     /**
      * The attributes that are mass assignable.
@@ -64,35 +55,26 @@ class Asset extends Model
         'profile_comment_id',
         'is_profile',
         'path',
-        'type'
+        'type',
     ];
 
     /**
-     * @var string[] $appends
+     * @var string[]
      */
     protected $appends = [
-        'url'
+        'url',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);
     }
 
-    /**
-     * @return string
-     */
     public function getUrlAttribute(): string
     {
         return Storage::disk($this->type)->url($this->path);
     }
 
-    /**
-     * @return string
-     */
     public static function generateName(): string
     {
         return sha1(Str::random(16));

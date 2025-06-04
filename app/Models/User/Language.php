@@ -4,6 +4,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Language extends Model
 {
@@ -16,11 +17,11 @@ class Language extends Model
      */
     protected $fillable = [
         'user_id',
-        'language_type_id'
+        'language_type_id',
     ];
 
-    /**
-     * @var bool $timestamps
-     */
-    public $timestamps = false;
+    public function languageType(): BelongsTo
+    {
+        return $this->belongsTo(LanguageType::class);
+    }
 }

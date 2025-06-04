@@ -18,7 +18,7 @@ class ProfileCommentFactory extends Factory
      */
     public function definition(): array
     {
-        $sentences = File::json(database_path('data/sentences.json'), true)["sentences"];
+        $sentences = File::json(resource_path('example_data/sentences.json'), true)['sentences'];
 
         return [
             'user' => User::inRandomOrder()->first()->id,

@@ -15,7 +15,7 @@
         If you made this request, please reset your password by clicking the button below:
     </p>
     <div style="text-align: center; margin: 30px 0;">
-        <a href="{{ route('forgotten-password.reset', [$user->password_reset_token]) }}" style="display: inline-block; background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+        <a href="{{ route('reset-password.render', [$user->password_reset_token]) }}" style="display: inline-block; background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
             Reset Your Password
         </a>
     </div>

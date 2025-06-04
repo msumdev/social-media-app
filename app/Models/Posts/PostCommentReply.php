@@ -18,14 +18,14 @@ class PostCommentReply extends Model
     protected $fillable = [
         'post_comment_id',
         'user',
-        'content'
+        'content',
     ];
 
     /**
-     * @var string[] $with
+     * @var string[]
      */
     protected $with = [
-        'user'
+        'user',
     ];
 
     /**

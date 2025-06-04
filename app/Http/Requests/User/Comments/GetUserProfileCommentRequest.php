@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class GetUserProfileCommentRequest
- * @package App\Http\Requests\User\Comments
  */
 class GetUserProfileCommentRequest extends BaseRequest
 {
@@ -26,7 +25,7 @@ class GetUserProfileCommentRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|exists:users,username'
+            'username' => 'required|exists:users,username',
         ];
     }
 }

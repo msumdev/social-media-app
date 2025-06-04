@@ -14,7 +14,7 @@ class Room extends Model
     use HasFactory, HybridRelations;
 
     /**
-     * @var string $connection
+     * @var string
      */
     protected $connection;
 
@@ -33,21 +33,21 @@ class Room extends Model
     protected $fillable = [
         'hidden',
         'name',
-        'type'
+        'type',
     ];
 
     /**
-     * @var string[] $hidden
+     * @var string[]
      */
     protected $hidden = [];
 
     /**
-     * @var string[] $with
+     * @var string[]
      */
     protected $with = ['members'];
 
     /**
-     * @var string[] $appends
+     * @var string[]
      */
     protected $appends = ['owners'];
 
@@ -56,9 +56,6 @@ class Room extends Model
         return $this->belongsToMany(User::class, 'room_members', 'room_id', 'user_id');
     }
 
-    /**
-     * @return HasMany
-     */
     public function messages(): HasMany
     {
         return $this->hasMany(RoomMessage::class);

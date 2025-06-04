@@ -9,15 +9,8 @@ use Illuminate\Http\JsonResponse;
 
 class InterestController extends Controller
 {
-    public function __construct(private readonly InterestService $interestService)
-    {
+    public function __construct(private readonly InterestService $interestService) {}
 
-    }
-
-    /**
-     * @param GetInterestsRequest $request
-     * @return JsonResponse
-     */
     public function index(GetInterestsRequest $request): JsonResponse
     {
         return $this->interestService->index($request);

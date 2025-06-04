@@ -7,7 +7,6 @@ use App\Models\Posts\Post;
 
 /**
  * Class GetPostCommentRequest
- * @package App\Http\Requests\User\Posts
  */
 class GetPostCommentRequest extends BaseRequest
 {
@@ -30,12 +29,12 @@ class GetPostCommentRequest extends BaseRequest
             'id' => [
                 'required',
                 'string',
-                function($attribute, $value, $fail) {
-                    if (!Post::where('_id', $value)->exists()) {
+                function ($attribute, $value, $fail) {
+                    if (! Post::where('_id', $value)->exists()) {
                         $fail('The post does not exist.');
                     }
-                }
-            ]
+                },
+            ],
         ];
     }
 }

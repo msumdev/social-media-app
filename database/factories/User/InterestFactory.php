@@ -3,7 +3,6 @@
 namespace Database\Factories\User;
 
 use App\Models\User\InterestType;
-use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,7 +19,6 @@ class InterestFactory extends Factory
     {
         return [
             'interest_type_id' => InterestType::inRandomOrder()->first()->id,
-            'user_id' => null,
         ];
     }
 }

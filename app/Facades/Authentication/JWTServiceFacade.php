@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * Class JWTServiceFacade
+ *
  * @mixin \App\Services\Authentication\JWTService
- * @package App\Facades\Authentication\JWTServiceFacade
  */
 class JWTServiceFacade extends Facade
 {
@@ -16,5 +16,8 @@ class JWTServiceFacade extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'jwt-service'; }
+    protected static function getFacadeAccessor()
+    {
+        return 'jwt-service';
+    }
 }

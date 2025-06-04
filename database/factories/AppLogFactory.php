@@ -23,7 +23,7 @@ class AppLogFactory extends Factory
             'profile' => User::latest()->first()->id,
             'ip_address' => $this->faker->ipv4,
             'user_agent' => $this->faker->userAgent,
-            'type' => AppLog::PROFILE_VIEW
+            'type' => AppLog::PROFILE_VIEW,
         ];
     }
 }

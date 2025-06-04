@@ -4,6 +4,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class InterestType extends Model
 {
@@ -15,18 +16,11 @@ class InterestType extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'label',
     ];
 
-    /**
-     * @var bool $timestamps
-     */
-    public $timestamps = false;
-
-    /**
-     * @var string[] $hidden
-     */
-    public $hidden = [
-        'pivot'
-    ];
+    public function interests(): HasMany
+    {
+        return $this->hasMany(Interest::class);
+    }
 }

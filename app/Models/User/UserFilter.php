@@ -21,7 +21,7 @@ class UserFilter extends Model
         'sexes',
         'genders',
         'countries',
-        'city',
+        'cities',
         'online',
         'keywords',
         'interests',
@@ -32,12 +32,8 @@ class UserFilter extends Model
         'sexes' => 'collection',
         'genders' => 'collection',
         'countries' => 'collection',
+        'cities' => 'collection',
         'keywords' => 'collection',
         'interests' => 'collection',
     ];
-
-    /**
-     * @var bool $timestamps
-     */
-    public $timestamps = true;
 }

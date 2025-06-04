@@ -2,13 +2,12 @@
 
 namespace App\Http\Requests\User\Posts;
 
-use App\Http\Requests\BaseRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class CreatePostRequest
- * @package App\Http\Requests\User\Posts
  */
-class CreatePostRequest extends BaseRequest
+class CreatePostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,11 +25,12 @@ class CreatePostRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'content' => 'required|string',
+            'text' => 'required|string',
+            'html' => 'required|string',
             'mentions' => 'sometimes|array',
             'hashtags' => 'sometimes|array',
             'images' => 'sometimes|array',
-            'images.*.data' => 'required|image|mimes:jpeg,png,jpg,gif|max:51200',
+            'images.*.file' => 'required|image|mimes:jpeg,png,jpg,gif|max:51200',
             'audios' => 'sometimes|array',
             'audios.*.data' => 'required|file|mimes:mp3,wav,ogg|max:51200',
         ];

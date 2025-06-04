@@ -4,8 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redis;
 
 class UserResource extends JsonResource
 {
@@ -17,29 +15,29 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "id" => $this->id,
-            "first_name" => $this->first_name,
-            "last_name" => $this->last_name,
-            "username" => $this->username,
-            "country" => [
-                "name" => $this->country->name,
-                "code" => $this->country->code,
+            'id' => $this->id,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'username' => $this->username,
+            'country' => [
+                'label' => $this->country->label,
+                'value' => $this->country->value,
             ],
-            "city" => [
-                "name" => $this->city->name,
+            'city' => [
+                'label' => $this->city->label,
             ],
-            "sexuality" => $this->sexuality->name,
-            "sex" => [
-                "name" => $this->sex->name,
-                "code" => $this->sex->code
+            'sexuality' => $this->sexuality->label,
+            'sex' => [
+                'label' => $this->sex->label,
+                'value' => $this->sex->value,
             ],
-            "gender" => $this->gender->name,
-            "age" => $this->age,
-            "follower_count" => $this->follower_count,
-            "profile_picture" => $this->profile_picture->url,
-            "settings" => [
-                "render_media" => $this->settings->render_media,
-            ]
+            'gender' => $this->gender->label,
+            'age' => $this->age,
+            'follower_count' => $this->followers()->count(),
+            'profile_picture' => $this->profilePicture->url,
+            'settings' => [
+                'render_media' => $this->userSetting->render_media,
+            ],
         ];
     }
 }

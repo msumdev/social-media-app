@@ -24,9 +24,9 @@ class GetRoomResource extends JsonResource
                     'username' => $member->username,
                     'name' => $member->first_name,
                     'age' => $member->age,
-                    'profile_picture' => $member->profile_picture->url,
-                    'follower_count' => $member->follower_count,
-                    'online' => Redis::get('user-count:' . $member->id) !== null,
+                    'profile_picture' => $member->profilePicture->url,
+                    'follower_count' => $member->followers()->count(),
+                    'online' => Redis::get('user-count:'.$member->id) !== null,
                     'recipient' => $member->id != auth()->id(),
                     'permissions' => $member->getAllPermissions()->pluck('name'),
                 ];
@@ -36,10 +36,6 @@ class GetRoomResource extends JsonResource
         ];
     }
 
-    /**
-     * @param $member
-     * @return mixed
-     */
     public function isUserFriend($member): mixed
     {
         return auth()->user()
@@ -48,14 +44,10 @@ class GetRoomResource extends JsonResource
             ->first();
     }
 
-    /**
-     * @param $member
-     * @return string
-     */
     public function getName($member): string
     {
         if ($this->isUserFriend($member)) {
-            return $member->first_name . ' ' . $member->last_name;
+            return $member->first_name.' '.$member->last_name;
         } else {
             return $member->username;
         }

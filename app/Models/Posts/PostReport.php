@@ -21,10 +21,10 @@ class PostReport extends Model
     ];
 
     /**
-     * @var string[] $hidden
+     * @var string[]
      */
     protected $hidden = [
-        'pivot'
+        'pivot',
     ];
 
     /**

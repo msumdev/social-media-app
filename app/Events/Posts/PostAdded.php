@@ -15,14 +15,8 @@ class PostAdded implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * @var Post $post
-     */
     public Post $post;
 
-    /**
-     * @var User $user
-     */
     private User $user;
 
     /**
@@ -33,7 +27,7 @@ class PostAdded implements ShouldBroadcastNow
         $this->post = $post;
         $this->user = $user;
 
-        Log::info('notifications-' . $this->user->id);
+        Log::info('notifications-'.$this->user->id);
     }
 
     /**
@@ -44,7 +38,7 @@ class PostAdded implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('notifications.' . $this->user->id),
+            new PrivateChannel('notifications.'.$this->user->id),
         ];
     }
 

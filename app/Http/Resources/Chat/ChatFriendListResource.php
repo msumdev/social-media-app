@@ -5,7 +5,6 @@ namespace App\Http\Resources\Chat;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redis;
 
 class ChatFriendListResource extends JsonResource
 {
@@ -23,9 +22,9 @@ class ChatFriendListResource extends JsonResource
             'last_name' => $this->last_name,
             'username' => $this->username,
             'age' => $this->age,
-            'profile_picture' => $this->profile_picture->url,
-            'status' => Cache::store('redis')->has('user:' . $this->id . ':session-count') ? 'online' : 'offline',
-            'last_seen' => '2 hours ago'
+            'profile_picture' => $this->profilePicture->url,
+            'status' => Cache::store('redis')->has('user:'.$this->id.':session-count') ? 'online' : 'offline',
+            'last_seen' => '2 hours ago',
         ];
     }
 }

@@ -2,14 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Facades\Authentication\JWTServiceFacade;
 use App\Models\Asset;
-use App\Models\User\User;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
-use Inertia\Inertia;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -42,52 +39,39 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        //        dd(
+        //            array_values(
+        //                Route::getCurrentRoute()->middleware()
+        //            )
+        //        );
+
         return array_merge(parent::share($request), [
             'success' => fn () => $request->session()->get('success'),
             'error' => fn () => $request->session()->get('error'),
             'token' => fn () => auth()->user()->jwt_token ?? null,
-            'id' => fn () => auth()->id()
+            'requires_auth' => in_array('auth', array_values(Route::getCurrentRoute()->middleware())),
+            'id' => fn () => auth()->id(),
         ]);
     }
 
     /**
-     * @param Request $request
-     * @param Closure $next
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function handle(Request $request, Closure $next)
     {
-//        if (env('APP_ENV') === 'local') {
-//            $user = User::where('email', 'admin@test.com')->first();
-//
-//            if (!auth()->check() && $user) {
-//                Auth::loginUsingId($user->id, true);
-//            }
-//        }
-
         if (auth()->check()) {
             $user = auth()->user();
 
-            if (!$user) {
-                auth()->logout();
-            }
-
-            if ($request->url() != route('login.render') && !$user->registered) {
+            if ($request->url() != route('login') && ! $user->registered) {
                 Session::flash('error', 'Please verify your email address to continue');
 
                 auth()->logout();
             }
 
-            if ($request->url() != route('login.render') && $user->banned) {
+            if ($request->url() != route('login') && $user->banned) {
                 Session::flash('error', 'Your account has been banned');
 
                 auth()->logout();
-            }
-        } else {
-            if ($request->url() != route('login.render') && $request->url() != route('home')) {
-                Session::flash('error', 'You must be logged in to access this page');
-
-                return redirect()->route('login.render');
             }
         }
 

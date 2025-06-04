@@ -10,14 +10,9 @@ use Illuminate\Http\JsonResponse;
 
 /**
  * Class PostReportService
- * @package App\Services\User\Posts
  */
 class PostReportService
 {
-    /**
-     * @param CreatePostReportRequest $request
-     * @return JsonResponse
-     */
     public function create(CreatePostReportRequest $request): JsonResponse
     {
         $post = Post::find($request->id);
@@ -27,13 +22,13 @@ class PostReportService
 
         if ($post->user->id === auth()->id()) {
             return response()->json([
-                'message' => 'You cannot report your own post'
+                'message' => 'You cannot report your own post',
             ], 400);
         }
 
         if ($postReport) {
             return response()->json([
-                'message' => 'You have already reported this post'
+                'message' => 'You have already reported this post',
             ], 400);
         }
 
@@ -51,7 +46,7 @@ class PostReportService
         }
 
         return response()->json([
-            'message' => 'Post reported'
+            'message' => 'Post reported',
         ]);
     }
 }

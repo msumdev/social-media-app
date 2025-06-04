@@ -23,9 +23,9 @@ class NewRoomResource extends JsonResource
                     'username' => $member->user->username,
                     'name' => $member->user->first_name,
                     'age' => $member->user->age,
-                    'profile_picture' => $member->user->profile_picture->url,
-                    'follower_count' => $member->user->follower_count,
-                    'online' => Redis::get('user-count:' . $member->user->id) !== null,
+                    'profile_picture' => $member->user->profilePicture->url,
+                    'follower_count' => $member->user->followers()->count(),
+                    'online' => Redis::get('user-count:'.$member->user->id) !== null,
                 ];
             }),
         ];

@@ -45,7 +45,7 @@ return [
         ],
 
         's3' => [
-            'driver' => 's3',
+            'driver' => env('APP_ENV') !== 'production' ? 'local' : 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
@@ -56,64 +56,64 @@ return [
             'throw' => true,
         ],
         'post-images' => [
-            'driver' => 's3',
+            'driver' => env('APP_ENV') !== 'production' ? 'local' : 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
+            'url' => env('APP_ENV') !== 'production' ? 'post-images' : env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => true,
             'visibility' => 'public',
-            'root' => 'post-images'
+            'root' => env('APP_ENV') !== 'production' ? storage_path('app/post-images') : 'post-images',
         ],
-        'post-audios' => [
-            'driver' => 's3',
+        'post-audio' => [
+            'driver' => env('APP_ENV') !== 'production' ? 'local' : 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
+            'url' => env('APP_ENV') !== 'production' ? 'post-audio' : env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => true,
             'visibility' => 'public',
-            'root' => 'post-audios'
+            'root' => env('APP_ENV') !== 'production' ? storage_path('app/post-audio') : 'post-audio',
         ],
         'profile-pictures' => [
-            'driver' => 's3',
+            'driver' => env('APP_ENV') !== 'production' ? 'local' : 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
+            'url' => env('APP_ENV') !== 'production' ? 'profile-pictures' : env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => true,
             'visibility' => 'public',
-            'root' => 'profile-pictures'
+            'root' => env('APP_ENV') !== 'production' ? storage_path('app/profile-pictures') : 'profile-pictures',
         ],
-        'post-comment-audios' => [
-            'driver' => 's3',
+        'post-comment-audio' => [
+            'driver' => env('APP_ENV') !== 'production' ? 'local' : 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
+            'url' => env('APP_ENV') !== 'production' ? 'post-comment-audio' : env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => true,
             'visibility' => 'public',
-            'root' => 'post-comment-audios'
+            'root' => env('APP_ENV') !== 'production' ? storage_path('app/post-comment-audio') : 'post-comment-audio',
         ],
-        'profile-comment-audios' => [
-            'driver' => 's3',
+        'profile-comment-audio' => [
+            'driver' => env('APP_ENV') !== 'production' ? 'local' : 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
+            'url' => env('APP_ENV') !== 'production' ? 'profile-comment-audio' : env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => true,
             'visibility' => 'public',
-            'root' => 'profile-comment-audios'
+            'root' => env('APP_ENV') !== 'production' ? storage_path('app/profile-comment-audio') : 'profile-comment-audio',
         ],
     ],
 
@@ -130,6 +130,11 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
+        public_path('post-images') => storage_path('app/post-images'),
+        public_path('post-audio') => storage_path('app/post-audio'),
+        public_path('profile-pictures') => storage_path('app/profile-pictures'),
+        public_path('post-comment-audio') => storage_path('app/post-comment-audio'),
+        public_path('profile-comment-audio') => storage_path('app/profile-comment-audio'),
     ],
 
 ];

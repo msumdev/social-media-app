@@ -16,7 +16,7 @@ class RoomMessageReportResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'message' => 'Message reported'
+            'message' => 'Message reported',
         ];
     }
 }

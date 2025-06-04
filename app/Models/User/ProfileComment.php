@@ -21,20 +21,20 @@ class ProfileComment extends Model
         'user',
         'content',
         'hashtags',
-        'mentions'
+        'mentions',
     ];
 
     /**
-     * @var string[] $with
+     * @var string[]
      */
     protected $with = [
         'user',
         'likes',
-        'assets'
+        'assets',
     ];
 
     /**
-     * @var string[] $appends
+     * @var string[]
      */
     protected $appends = [
         'created_at_title',
@@ -42,10 +42,10 @@ class ProfileComment extends Model
     ];
 
     /**
-     * @var string[] $hidden
+     * @var string[]
      */
     protected $hidden = [
-        'pivot'
+        'pivot',
     ];
 
     /**
@@ -56,41 +56,26 @@ class ProfileComment extends Model
         return $this->belongsTo(User::class, 'user');
     }
 
-    /**
-     * @return HasMany
-     */
     public function likes(): HasMany
     {
         return $this->hasMany(ProfileCommentLike::class, 'profile_comment_id');
     }
 
-    /**
-     * @return HasMany
-     */
     public function assets(): HasMany
     {
         return $this->hasMany(Asset::class, 'profile_comment_id');
     }
 
-    /**
-     * @return string
-     */
     public function getCreatedAtTitleAttribute(): string
     {
         return Carbon::parse($this->created_at)->format('d M Y H:i');
     }
 
-    /**
-     * @return string
-     */
     public function getCreatedAtDisplayAttribute(): string
     {
         return Carbon::parse($this->created_at)->diffForHumans();
     }
 
-    /**
-     * @return string
-     */
     public static function getIndexName(): string
     {
         return (new self)->index;

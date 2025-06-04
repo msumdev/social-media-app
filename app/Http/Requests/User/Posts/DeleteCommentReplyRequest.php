@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class DeleteCommentReplyRequest
- * @package App\Http\Requests\User\Posts
  */
 class DeleteCommentReplyRequest extends BaseRequest
 {

@@ -4,6 +4,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LanguageType extends Model
 {
@@ -16,18 +17,11 @@ class LanguageType extends Model
      */
     protected $fillable = [
         'code',
-        'name'
+        'name',
     ];
 
-    /**
-     * @var bool $timestamps
-     */
-    public $timestamps = false;
-
-    /**
-     * @var string[] $hidden
-     */
-    public $hidden = [
-        'pivot'
-    ];
+    public function languages(): HasMany
+    {
+        return $this->hasMany(Language::class);
+    }
 }

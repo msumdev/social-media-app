@@ -9,15 +9,8 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ChatFriendListController extends Controller
 {
-    public function __construct(private readonly ChatFriendListService $chatFriendListService)
-    {
+    public function __construct(private readonly ChatFriendListService $chatFriendListService) {}
 
-    }
-
-    /**
-     * @param ChatFriendListIndexRequest $request
-     * @return AnonymousResourceCollection
-     */
     public function index(ChatFriendListIndexRequest $request): AnonymousResourceCollection
     {
         return $this->chatFriendListService->index($request);

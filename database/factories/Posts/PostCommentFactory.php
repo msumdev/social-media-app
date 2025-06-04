@@ -3,11 +3,10 @@
 namespace Database\Factories\Posts;
 
 use App\Models\Posts\Post;
-use App\Models\User\User;
+use App\Models\Posts\PostComment;
+use App\Models\Posts\PostCommentAudioAsset;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User\User>
@@ -21,13 +20,28 @@ class PostCommentFactory extends Factory
      */
     public function definition(): array
     {
-        $sentences = File::json(database_path('data/sentences.json'), true)["sentences"];
+        $sentences = File::json(resource_path('example_data/sentences.json'), true)['sentences'];
+        $hashtags = File::json(resource_path('example_data/hashtags.json'), true)['hashtags'];
 
         return [
-            '_id' => Str::random(24),
             'content' => $this->faker->randomElement($sentences),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'hashtags' => $this->faker->randomElements($hashtags, rand(1, 6)),
         ];
+    }
+
+    /**
+     * Configure any relationships while creating the post
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (PostComment $postComment) {
+            $postComment->postCommentAudioAssets()->saveMany(
+                PostCommentAudioAsset::factory()
+                    ->count(rand(0, 2))
+                    ->create([
+                        'post_comment_id' => $postComment->id,
+                    ])
+            );
+        });
     }
 }

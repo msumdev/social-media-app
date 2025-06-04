@@ -29,15 +29,12 @@ class ProfileCommentLike extends Authenticatable
     protected $hidden = [];
 
     /**
-     * @var string[] $casts
+     * @var string[]
      */
     protected $casts = [
         'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
     public function comment(): BelongsToMany
     {
         return $this->belongsToMany(ProfileComment::class);

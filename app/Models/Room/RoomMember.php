@@ -26,31 +26,25 @@ class RoomMember extends Model
     ];
 
     /**
-     * @var string[] $hidden
+     * @var string[]
      */
     protected $hidden = [];
 
     /**
-     * @var string[] $with
+     * @var string[]
      */
     protected $with = ['user'];
 
     /**
-     * @var string[] $appends
+     * @var string[]
      */
     protected $appends = ['user_permissions'];
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return array
-     */
     public function getUserPermissionsAttribute(): array
     {
         return $this->user->getAllPermissions()->pluck('name')->toArray();

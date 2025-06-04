@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class BlockUserRequest
- * @package App\Http\Requests\User
  */
 class BlockUserRequest extends BaseRequest
 {

@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class GetGenderRequest
- * @package App\Http\Requests\User\Filters
  */
 class GetGenderRequest extends BaseRequest
 {

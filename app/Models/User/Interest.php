@@ -4,6 +4,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Interest extends Model
 {
@@ -16,11 +17,11 @@ class Interest extends Model
      */
     protected $fillable = [
         'interest_type_id',
-        'user_id'
+        'user_id',
     ];
 
-    /**
-     * @var bool $timestamps
-     */
-    public $timestamps = false;
+    public function interestType(): BelongsTo
+    {
+        return $this->belongsTo(interestType::class);
+    }
 }

@@ -2,10 +2,9 @@
 
 namespace App\Models\Posts;
 
-use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use \PDPhilip\Elasticsearch\Eloquent\HybridRelations;
+use PDPhilip\Elasticsearch\Eloquent\HybridRelations;
 
 class HashTag extends Model
 {
@@ -17,13 +16,13 @@ class HashTag extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     /**
-     * @var string[] $hidden
+     * @var string[]
      */
     protected $hidden = [
-        'pivot'
+        'pivot',
     ];
 }

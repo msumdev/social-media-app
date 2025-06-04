@@ -1,5 +1,7 @@
 stages:
   - build
+#  - run-test
+#  - deploy
 
 build-frontend:
   stage: build
@@ -23,6 +25,7 @@ build-frontend:
 
 build-backend:
   stage: build
+  image: gitlab.restricted.digital:5050/johnj/meetzy/build/meetzy_backend:latest
   services:
     - docker:24.0.5-dind
   cache:
@@ -31,6 +34,8 @@ build-backend:
   script:
     - cp .env.staging .env
     - composer install
+#    - php artisan app:delete-all-indexes
+#    - php artisan app:create-indexes
   tags:
     - docker
   artifacts:
@@ -38,3 +43,72 @@ build-backend:
       - vendor
       - .env
     expire_in: 1 day
+
+#run-test:
+#  stage: run-test
+#  image: gitlab.restricted.digital:5050/johnj/meetzy/build/meetzy_backend:latest
+#  script:
+#    - mv .env.staging .env
+#    - touch storage/logs/fpm.log
+#    - touch storage/logs/laravel.log
+#    - touch storage/logs/queue.log
+#    - touch storage/logs/reverb.log
+#    - touch storage/logs/schedule.log
+#    - touch storage/logs/supervisor.log
+#    - php artisan test --parallel
+#  needs:
+#    - job: build-frontend
+#    - job: build-backend
+#  artifacts:
+#    paths:
+#      - storage/logs
+#    when: always
+#    expire_in: 1 week
+#
+#deploy-to-staging:
+#  stage: deploy
+#  image: docker:24.0.5
+#  services:
+#    - docker:24.0.5-dind
+#  cache:
+#    - key: "$CI_PROJECT_NAME"
+#      policy: push
+#  before_script:
+#    - apk update && apk add openssh-client zip
+#    - mkdir -p ~/.ssh
+#    - echo $SSH_PUBLIC_KEY | base64 -d > ~/.ssh/id_rsa.pub
+#    - cat ~/.ssh/id_rsa.pub
+#    - echo $SSH_PRIVATE_KEY | base64 -d > ~/.ssh/id_rsa
+#    - cat ~/.ssh/id_rsa
+#    - chmod 600 ~/.ssh/id_rsa
+#    - chmod 600 ~/.ssh/id_rsa.pub
+#    - ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+#  script:
+#    - zip -r meetzy.zip . > /dev/null 2>&1
+#    - scp -i ~/.ssh/id_rsa meetzy.zip $SSH_USER@$SSH_HOST:/home/default/
+#    - |
+#      ssh -i ~/.ssh/id_rsa $SSH_USER@$SSH_HOST << EOF
+#        unzip -o /home/default/meetzy.zip -d /home/default/meetzy > /dev/null 2>&1
+#        rm /home/default/meetzy.zip
+#      EOF
+#    - |
+#      ssh -i ~/.ssh/id_rsa $SSH_USER@$SSH_HOST << EOF
+#        docker stop meetzy_backend || true
+#        docker rm meetzy_backend || true
+#        docker images --filter=reference="gitlab.restricted.digital:5050/johnj/meetzy/meetzy_backend:*" -q | xargs -r docker rmi
+#
+#        docker stop meetzy_web_server || true
+#        docker rm meetzy_web_server || true
+#        docker images --filter=reference="gitlab.restricted.digital:5050/johnj/meetzy/meetzy_web_server:*" -q | xargs -r docker rmi
+#
+#        docker run -d --name meetzy_backend --network meetzy_network --add-host=10.0.0.11:10.0.0.11 -p 8080:8080 -v /home/default/meetzy:/opt/meetzy/ -v /home/default/meetzy/.docker/supervisor/conf.d:/etc/supervisor/conf.d -v /home/default/meetzy/.docker/supervisor/supervisord.conf:/etc/supervisor/supervisord.conf gitlab.restricted.digital:5050/johnj/meetzy/build/meetzy_backend:latest supervisord -c /etc/supervisor/supervisord.conf -n
+#        docker run -d --name meetzy_web_server --network meetzy_network --env FPM_HOST=meetzy_backend:9000 --env WEBSOCKET_HOST=meetzy_backend:8080 -p 80:80 -v /home/default/meetzy/:/opt/meetzy/ -v /home/default/meetzy/.docker/nginx/default.conf.template:/etc/nginx/templates/default.conf.template --tty nginx:stable-alpine
+#
+#        docker exec -i meetzy_backend bash -c "php artisan app:reset"
+#      EOF
+#  tags:
+#    - docker
+#  needs:
+#    - job: build-frontend
+#    - job: build-backend
+#    - job: run-test

@@ -1,93 +1,46 @@
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
-import { createStore } from 'vuex';
-import Toast from 'vue-toastification';
-import 'vue-toastification/dist/index.css';
-import { initializeWebSocket, emitter } from './websocket';
-
-import Pusher from 'pusher-js';
-window.Pusher = Pusher;
-
-const store = createStore({
-    state() {
-        return {
-            isNightMode: false,
-            isLoading: true,
-            echo: null,
-            posts: [],
-        };
-    },
-    mutations: {
-        toggleNightMode(state) {
-            state.isNightMode = !state.isNightMode;
-        },
-        setNightMode(state, value) {
-            state.isNightMode = value;
-        },
-        hidePreloader(state) {
-            state.isLoading = false;
-        },
-    },
-    actions: {
-        toggleDayNight({ commit }) {
-            document.body.classList.toggle('night-mode');
-
-            const isNightMode = document.body.classList.contains('night-mode');
-            localStorage.setItem('night-mode', isNightMode ? 'true' : 'false');
-            commit('setNightMode', isNightMode);
-        },
-        loadNightModeFromStorage({ commit }) {
-            const nightModeEnabled = localStorage.getItem('night-mode') === 'true';
-            if (nightModeEnabled) {
-                document.body.classList.add('night-mode');
-            }
-            commit('setNightMode', nightModeEnabled);
-        },
-        hidePreloader({ commit }) {
-            setTimeout(() => {
-                commit('hidePreloader');
-            }, 400);
-        }
-    }
-});
+import { createPinia } from "pinia";
+import { UserStore } from '@/Stores/userStore';
+import { DarkModeStore } from "@/Stores/DarkModeStore.js";
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import DefaultLayout from "@/Layouts/DefaultLayout.vue";
+import UnauthenticatedLayout from "@/Layouts/UnauthenticatedLayout.vue";
+import PortalVue from 'portal-vue';
 
 createInertiaApp({
     resolve: (name) => {
         const pages = import.meta.glob('./Pages/**/*.vue', { eager: true });
-        return pages[`./Pages/${name}.vue`];
+        let page = pages[`./Pages/${name}.vue`];
+
+        if (name.startsWith('Auth') || name.startsWith('Register')) {
+            page.default.layout = UnauthenticatedLayout;
+        } else {
+            page.default.layout = DefaultLayout;
+        }
+
+        return page;
     },
     setup({ el, App, props, plugin }) {
+        const pinia = createPinia();
+        pinia.use(piniaPluginPersistedstate)
+
         const app = createApp({ render: () => h(App, props) })
+            .use(PortalVue)
             .use(plugin)
-            .use(store) // Use Vuex store
-            .use(Toast);
+            .use(pinia);
 
-        app.mixin({
-            mounted() {
-                this.$store.dispatch('loadNightModeFromStorage');
+        const darkModeStore = DarkModeStore();
+        darkModeStore.applyDarkMode();
 
-                if (window.location.pathname !== '/login' && !window.websocketInitialized) {
-                    const token = this.$page.props.token;
-                    initializeWebSocket(token);
-                    window.websocketInitialized = true; // Mark as initialized
-                }
+        const userStore = UserStore();
 
-                window.addEventListener('load', () =>
-                    this.$store.dispatch('hidePreloader')
-                );
-            },
-            beforeDestroy() {
-                window.removeEventListener('load', () =>
-                    this.$store.dispatch('hidePreloader')
-                );
-            },
-            methods: {
-                toggleDayNight() {
-                    this.$store.dispatch('toggleDayNight');
-                },
-            },
-        });
+        if (props.initialPage.props.requires_auth) {
+            (async () => {
+                await userStore.getCurrentUser();
+            })();
+        }
 
         app.mount(el);
-    },
+    }
 });

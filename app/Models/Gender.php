@@ -15,11 +15,11 @@ class Gender extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'label',
     ];
 
     /**
-     * @var bool $timestamps
+     * @var bool
      */
     public $timestamps = false;
 }

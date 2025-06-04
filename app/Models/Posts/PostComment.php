@@ -2,31 +2,22 @@
 
 namespace App\Models\Posts;
 
-use App\Models\Asset;
 use App\Models\User\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use MongoDB\Laravel\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use MongoDB\Laravel\Eloquent\HybridRelations;
+use MongoDB\Laravel\Eloquent\Model;
 
 class PostComment extends Model
 {
-    use HasFactory;
+    use HasFactory, HybridRelations;
 
     /**
-     * @var string $connection
+     * @var string
      */
     protected $connection = 'mongodb';
-
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-
-        if (app()->runningUnitTests()) {
-            $this->connection = 'mongodb_testing';
-        }
-    }
 
     /**
      * The attributes that are mass assignable.
@@ -38,56 +29,53 @@ class PostComment extends Model
         'user_id',
         'content',
         'hashtags',
-        'mentions'
+        'mentions',
     ];
 
     /**
-     * @var string[] $with
+     * @var string[]
      */
     protected $with = [
         'user',
-        'likes',
-        'assets'
     ];
 
     /**
-     * @var string[] $appends
+     * @var string[]
      */
     protected $appends = [
         'created_at_title',
         'created_at_display',
     ];
 
-    /**
-     * @return BelongsTo
-     */
+    protected static function booted()
+    {
+        static::deleting(function (PostComment $comment) {
+            $comment->postCommentReactions()->delete();
+            $comment->postCommentAudioAssets()->delete();
+        });
+    }
+
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function likes()
+    public function postCommentReactions()
     {
-        return $this->hasMany(PostCommentLike::class, 'post_comment_id');
+        return $this->hasMany(PostCommentReaction::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function post(): BelongsTo
     {
-        return $this->belongsTo(Post::class, 'post_id');
+        return $this->belongsTo(Post::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function assets(): HasMany
+    public function postCommentAudioAssets(): HasMany
     {
-        return $this->hasMany(Asset::class, 'post_comment_id');
+        return $this->hasMany(PostCommentAudioAsset::class);
     }
 
     /**

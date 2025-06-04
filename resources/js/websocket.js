@@ -10,9 +10,9 @@ export function initializeWebSocket(token) {
     }
 
     const addresses = [
-        'ws://localhost:3000',
-        'ws://localhost:3001',
+        'wss://meetzy.mcsportfolio.com/app',
     ]
+
     const host = addresses[Math.floor(Math.random() * addresses.length)];
 
     websocket = new WebSocket(`${host}/?token=${token}`);

@@ -31,7 +31,7 @@ class PostUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('main')
+            new PrivateChannel('main'),
         ];
     }
 

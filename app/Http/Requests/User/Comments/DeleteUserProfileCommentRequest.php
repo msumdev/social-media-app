@@ -7,7 +7,6 @@ use App\Models\User\ProfileComment;
 
 /**
  * Class DeleteUserProfileCommentRequest
- * @package App\Http\Requests\User\Comments
  */
 class DeleteUserProfileCommentRequest extends BaseRequest
 {
@@ -30,12 +29,12 @@ class DeleteUserProfileCommentRequest extends BaseRequest
             'id' => [
                 'required',
                 'string',
-                function($attribute, $value, $fail) {
-                    if (!ProfileComment::where('_id', $value)->exists()) {
+                function ($attribute, $value, $fail) {
+                    if (! ProfileComment::where('_id', $value)->exists()) {
                         $fail('The comment does not exist');
                     }
-                }
-            ]
+                },
+            ],
         ];
     }
 }

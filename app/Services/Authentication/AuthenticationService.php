@@ -4,31 +4,16 @@ namespace App\Services\Authentication;
 
 use App\Facades\Authentication\JWTServiceFacade;
 use App\Http\Requests\Authentication\LoginRequest;
-use App\Http\Requests\Authentication\RegistrationRequest;
-use App\Http\Requests\Authentication\ResetPasswordRequest;
-use App\Jobs\Auth\NewUser;
-use App\Jobs\Auth\ResetPassword;
-use App\Models\User\User;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Inertia\Inertia;
-use Inertia\Response;
 
 /**
  * Class AuthenticationService
- * @package App\Services\Authentication
  */
 class AuthenticationService
 {
     /**
-     * @param LoginRequest $request
-     * @return RedirectResponse
      * @throws ValidationException
      */
     public function authenticate(LoginRequest $request): RedirectResponse
@@ -37,11 +22,11 @@ class AuthenticationService
 
         $credentials = $request->only('email', 'password');
 
-        if (!auth()->attempt($credentials)) {
+        if (! auth()->attempt($credentials)) {
             RateLimiter::hit(request()->ip());
 
             throw ValidationException::withMessages([
-                'email' => __('auth.failed')
+                'email' => __('auth.failed'),
             ]);
         }
 
@@ -51,7 +36,7 @@ class AuthenticationService
 
         $user = auth()->user();
 
-        if (!$user->jwt_token_expires_at) {
+        if (! $user->jwt_token_expires_at) {
             $token = JWTServiceFacade::generate();
 
             $user->jwt_token = base64_encode($token['token']);
@@ -71,8 +56,6 @@ class AuthenticationService
     }
 
     /**
-     * @param $request
-     * @return void
      * @throws ValidationException
      */
     public function ensureIsNotRateLimited($request): void

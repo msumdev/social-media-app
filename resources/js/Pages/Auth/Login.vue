@@ -1,87 +1,68 @@
 <template>
-    <DarkModeHeader />
+    <portal to="header">
+        <h1 class="text-4xl font-bold text-center text-blue-500 mb-4 mt-8">
+            Login into your account
+        </h1>
+        <h2 class="text-xl text-center text-gray-800 mb-8 dark:text-gray-400">
+            Welcome back! Please enter your details.
+        </h2>
+    </portal>
 
-    <div class="default-area">
-        <div class="default-wrap">
-            <FormTop title="Log into your account" description="Welcome back! Please enter your details." />
-
-            <form class="default-form login bg-white" @submit.prevent="login">
-                <Alerts />
-
-                <div class="custom-form-group mb_20">
-                    <label for="email" class="text-blue text-sm pb-3">Email</label>
-                    <input type="text" class="input-grey pt_12 pb_12 pl_15 pr_15 round12 grey-background w-100" placeholder="Enter your email" v-model="loginForm.email">
-                </div>
-                <div class="custom-form-group password-from-group input-active pb_20">
-                    <label for="password" class="text-blue text-sm pb-3">Password</label>
-                    <div class="position-relative">
-                        <input id="password" class="input-grey pt_12 pb_12 pl_15 pe-5 round12 grey-background w-100" placeholder="Enter your password" v-model="loginForm.password" :type="showPassword ? 'text' : 'password'">
-                        <button type="button" class="password-eye position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; background: transparent; border: none;" @click="toggleShowPassword">
-                            <img src="/images/eye.svg" class="eye" alt="eye" style="width: 20px; height: 20px;">
-                        </button>
-                    </div>
-                </div>
-
-                <div class="custom-form-group mb-5 d-flex align-items-center justify-content-between">
-                    <div class="checkbox d-flex align-items-center gap_x_8" :class="{ active: keepMeLoggedIn === true }" @click="toggleKeepMeLoggedIn">
-                        <div class="check">
-                            <img src="/images/check.svg" class="icon14 imgWhite" alt="check">
-                        </div>
-                        <p class="text-sm f_500 text-black">Keep me logged in</p>
-                    </div>
-
-                    <Link href="/forgotten-password" class="f_600 text-blue text-sm site-icon">Forgot Password</Link>
-                </div>
-
-                <button type="submit" class="blue-button w-100">Log me in</button>
-            </form>
-
-            <p class="text-center text-sm f_500 mt_32 text-form-bottom">
-                <span class="text-dark-grey">Don’t have an account? </span>
-
-                <Link href="/registration" class="site-icon text-blue">Register</Link>
-            </p>
+    <form @submit.prevent="submit()">
+        <div class="mb-5">
+            <label for="email" class="block mb-2 text-md text-blue-600 dark:text-white">Email</label>
+            <input type="email" id="email" class="primary-input" placeholder="Enter your email" v-model="form.email" />
         </div>
-    </div>
+        <div class="mb-5">
+            <label for="password" class="block mb-2 text-md text-blue-600 dark:text-white">Password</label>
+            <input type="password" id="password" class="primary-input" placeholder="Enter your password" v-model="form.password" />
+        </div>
+        <div class="flex items-start justify-between mb-5">
+            <div class="flex items-center h-5">
+                <input id="remember" type="checkbox" class="checkbox cursor-pointer accent-violet-900 dark:accent-gray-600" />
+                <label for="remember" class="ms-2 text-sm text-gray-900 dark:text-gray-300 cursor-pointer">Keep me logged in</label>
+            </div>
+            <Link href="/forgotten-password" class="default-link">Reset Password</Link>
+        </div>
+        <button type="submit" class="primary-button w-full">
+            Log me in
+        </button>
+    </form>
+
+    <portal to="footer">
+        Don’t have an account?
+        <Link href="/registration" class="default-link">Register</Link>
+    </portal>
 </template>
 
 <script>
-import { Link } from '@inertiajs/vue3';
-import DarkModeHeader from "@/Shared/Auth/DarkModeHeader.vue";
-import Alerts from "@/Shared/Auth/Alerts.vue";
-import FormTop from "@/Shared/Auth/FormTop.vue";
-import { websocket } from "@/websocket.js";
+import {Link, useForm} from '@inertiajs/vue3'
+import { UserStore } from '@/Stores/userStore';
+import UnauthenticatedLayout from "@/Layouts/UnauthenticatedLayout.vue";
 
 export default {
     components: {
         Link,
-        DarkModeHeader,
-        Alerts,
-        FormTop
     },
     data() {
         return {
-            keepMeLoggedIn: false,
-            showPassword: false,
-            loginForm: this.$inertia.form({
-                email: 'admin@test.com',
+            form: useForm({
+                email: 'test-user@test.com',
                 password: '&BrefT2D3UopN$s$',
-            })
+            }),
+            userStore: UserStore(),
         }
     },
     methods: {
-        toggleKeepMeLoggedIn() {
-            this.keepMeLoggedIn = !this.keepMeLoggedIn;
-        },
-        toggleShowPassword() {
-            this.showPassword = !this.showPassword;
-        },
-        login() {
-            this.loginForm.post('/login', {
-                preserveScroll: true,
-                onSuccess: () => {}
+        submit() {
+            this.form.post(`/login`, {
+                onSuccess: () => {
+                    (async () => {
+                        await this.userStore.getCurrentUser();
+                    })();
+                }
             });
-        },
+        }
     }
-};
+}
 </script>

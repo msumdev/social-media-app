@@ -30,7 +30,7 @@ class GenderFactory extends Factory
         ];
 
         return [
-            'name' => $genders[array_rand($genders)],
+            'label' => $genders[array_rand($genders)],
         ];
     }
 }

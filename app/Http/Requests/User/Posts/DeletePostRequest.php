@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class DeletePostRequest
- * @package App\Http\Requests\User\Posts
  */
 class DeletePostRequest extends BaseRequest
 {

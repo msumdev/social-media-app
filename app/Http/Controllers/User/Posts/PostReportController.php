@@ -9,15 +9,8 @@ use Illuminate\Http\JsonResponse;
 
 class PostReportController extends Controller
 {
-    public function __construct(private readonly PostReportService $postReportService)
-    {
+    public function __construct(private readonly PostReportService $postReportService) {}
 
-    }
-
-    /**
-     * @param CreatePostReportRequest $request
-     * @return JsonResponse
-     */
     public function create(CreatePostReportRequest $request): JsonResponse
     {
         return $this->postReportService->create($request);

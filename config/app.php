@@ -129,5 +129,5 @@ return [
         'away' => 2,
         'busy' => 3,
         'do_not_disturb' => 4,
-    ]
+    ],
 ];

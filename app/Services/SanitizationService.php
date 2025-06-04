@@ -7,31 +7,33 @@ use HTMLPurifier_Config;
 
 /**
  * Class SanitizationService
- * @package App\Services
  */
 class SanitizationService
 {
-    /**
-     * @param string $string
-     * @return string
-     */
     public function sanitize(string $string): string
     {
         $string = $this->decode_until_plain($string);
         $config = HTMLPurifier_Config::createDefault();
 
         $config->set('HTML.Allowed', 'p, br, em, strong, u, span[class], h1, h2, ol, ul, li, span[contenteditable]');
-        $config->set('Attr.AllowedClasses', ['mention', 'hashtag', 'badge']);
+        $config->set('Attr.AllowedClasses', [
+            'bg-green-50',
+            'text-green-600',
+            'bg-blue-50',
+            'text-blue-400',
+            'me-1',
+            'px-1.5',
+            'py-0.5',
+            'rounded-sm',
+            'dark:bg-blue-900',
+            'dark:text-blue-300'
+        ]);
 
         $purifier = new HTMLPurifier($config);
 
         return $purifier->purify($string);
     }
 
-    /**
-     * @param string $string
-     * @return string
-     */
     public function decode_until_plain(string $string): string
     {
         $previous = '';

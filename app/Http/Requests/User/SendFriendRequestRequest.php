@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class SendFriendRequestRequest
- * @package App\Http\Requests\User
  */
 class SendFriendRequestRequest extends BaseRequest
 {

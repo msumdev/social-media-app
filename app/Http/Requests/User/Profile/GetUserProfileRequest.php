@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class GetUserProfileRequest
- * @package App\Http\Requests\User\Profile
  */
 class GetUserProfileRequest extends BaseRequest
 {
@@ -27,7 +26,7 @@ class GetUserProfileRequest extends BaseRequest
     {
         return [
             'username' => 'required|exists:users,username',
-            'json' => 'nullable|boolean'
+            'json' => 'nullable|boolean',
         ];
     }
 }

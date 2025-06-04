@@ -5,15 +5,11 @@ namespace App\Jobs;
 use App\Models\Posts\Post;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\Log;
 
 class PostAddedJob implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * @var Post $post
-     */
     private Post $post;
 
     /**

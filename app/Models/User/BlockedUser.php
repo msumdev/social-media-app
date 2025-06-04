@@ -21,7 +21,7 @@ class BlockedUser extends Model
     ];
 
     /**
-     * @var bool $timestamps
+     * @var bool
      */
     public $timestamps = true;
 }

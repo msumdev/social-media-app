@@ -2,51 +2,48 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Facades\Redis;
+use App\Exceptions\Notifications\InvalidNotificationType;
 use App\Models\Room\Room;
+use Illuminate\Support\Facades\Redis;
 
 trait RedisWebsocketTrait
 {
+    const array TYPES = ['room:new-message', 'room:message-deleted'];
 
-    /**
-     * @param array $usersToNotify
-     * @param string $type
-     * @param $data
-     * @return void
-     */
-    private function notify(array $usersToNotify, string $type, $data): void
+    private function notify(array $usersToNotify, string $type, mixed $data): void
     {
+        if (! in_array($type, self::TYPES)) {
+            throw new InvalidNotificationType("Invalid notification type $type");
+        }
+
         if (count($usersToNotify) == 0) {
             return;
         }
 
         Redis::pipeline(function ($pipe) use ($data, $usersToNotify, $type) {
-            $payload = [
-                'type' => $type,
-                'data' => $data
-            ];
-
             foreach ($usersToNotify as $userToNotify) {
-                $payload['userId'] = $userToNotify;
+                $payload = $this->createPayload($type, $data, $userToNotify);
 
-                $pipe->publish('main_subscriber_channel', json_encode($payload));
+                $pipe->publish('main_subscriber_channel', $payload);
             }
         });
     }
 
-    /**
-     * @param int $roomId
-     * @param array $exclude
-     * @return array
-     */
-    public function getUsersToNotify(int $roomId, array $exclude = []): array
+    protected function createPayload(string $type, mixed $data, int $userToNotify): string
+    {
+        $payload = [
+            'type' => $type,
+            'data' => $data,
+            'userId' => $userToNotify,
+        ];
+
+        return json_encode($payload);
+    }
+
+    public function getUserIdsFromRoom(int $roomId, array $exclude = []): array
     {
         $room = Room::find($roomId);
-        $members = $room->members->pluck('user_id')->toArray();
-
-        if ($room->recipient_id && !in_array($room->recipient_id, $members)) {
-            $members[] = $room->recipient_id;
-        }
+        $members = $room->members->pluck('id')->toArray();
 
         return array_diff($members, $exclude);
     }

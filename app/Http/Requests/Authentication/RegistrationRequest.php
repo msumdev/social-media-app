@@ -2,14 +2,11 @@
 
 namespace App\Http\Requests\Authentication;
 
-use App\Http\Requests\BaseRequest;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Class RegistrationRequest
- * @package App\Http\Requests\Authentication
  */
 class RegistrationRequest extends FormRequest
 {
@@ -41,11 +38,11 @@ class RegistrationRequest extends FormRequest
                     $age = $birthDate->age;
 
                     if ($age < $minimumAge) {
-                        $fail('You must be at least ' . $minimumAge . ' years old to register.');
+                        $fail('You must be at least '.$minimumAge.' years old to register.');
                     }
 
                     if ($age > $maximumAge) {
-                        $fail('You must be at most ' . $maximumAge . ' years old to register.');
+                        $fail('You must be at most '.$maximumAge.' years old to register.');
                     }
                 },
             ],
@@ -58,37 +55,36 @@ class RegistrationRequest extends FormRequest
                     $passwordLength = 8;
 
                     if (strlen($value) < $passwordLength) {
-                        $fail('The ' . $attribute . ' must be at least ' . $passwordLength . ' characters.');
+                        $fail('The '.$attribute.' must be at least '.$passwordLength.' characters.');
                     }
 
-                    if (!preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬\-!\[\]:;"\/\\\`\.,<>?]/', $value)) {
-                        $fail('The ' . $attribute . ' must contain at least one special character.');
+                    if (! preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬\-!\[\]:;"\/\\\`\.,<>?]/', $value)) {
+                        $fail('The '.$attribute.' must contain at least one special character.');
                     }
 
-                    if (!preg_match('/[0-9]/', $value)) {
-                        $fail('The ' . $attribute . ' must contain at least one number.');
+                    if (! preg_match('/[0-9]/', $value)) {
+                        $fail('The '.$attribute.' must contain at least one number.');
                     }
 
-                    if (!preg_match('/[A-Z]/', $value)) {
-                        $fail('The ' . $attribute . ' must contain at least one capital letter.');
+                    if (! preg_match('/[A-Z]/', $value)) {
+                        $fail('The '.$attribute.' must contain at least one capital letter.');
                     }
 
-                    if (!preg_match('/[a-z]/', $value)) {
-                        $fail('The ' . $attribute . ' must contain at least one lowercase letter.');
+                    if (! preg_match('/[a-z]/', $value)) {
+                        $fail('The '.$attribute.' must contain at least one lowercase letter.');
                     }
                 },
             ],
             'confirm_password' => 'required|string|same:password',
-            'country' => 'required|exists:countries,id',
-            'city' => 'nullable|exists:cities,id',
-            'gender' => 'required|exists:genders,id',
-            'sex' => 'required|exists:sexes,id',
+            'country_id' => 'required|exists:countries,id',
+            'city_id' => 'nullable|exists:cities,id',
+            'gender_id' => 'required|exists:genders,id',
+            'sexuality_id' => 'required|exists:sexuality_types,id',
+            'interests' => 'required|array|exists:interest_types,id',
+            'sex_id' => 'required|exists:sexes,id',
         ];
     }
 
-    /**
-     * @return void
-     */
     public function prepareForValidation(): void
     {
         if ($this->has('date_of_birth')) {

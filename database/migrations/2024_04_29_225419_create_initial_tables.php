@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -10,26 +9,37 @@ use Spatie\Permission\Models\Role;
 return new class extends Migration
 {
     /**
+     * @var string[]
+     */
+    private array $mongoCollections = [
+        'app_logs',
+        'post_comments',
+        'posts',
+        'room_messages',
+        'user_profiles',
+    ];
+
+    /**
      * Run the migrations.
      */
     public function up(): void
     {
-        if (!Schema::hasTable('genders')) {
+        if (! Schema::hasTable('genders')) {
             Schema::create('genders', function (Blueprint $table) {
                 $table->id();
-                $table->string('name');
+                $table->string('label');
             });
         }
 
-        if (!Schema::hasTable('sexes')) {
+        if (! Schema::hasTable('sexes')) {
             Schema::create('sexes', function (Blueprint $table) {
                 $table->id();
-                $table->string('name');
-                $table->string('code');
+                $table->string('label');
+                $table->string('value');
             });
         }
 
-        if (!Schema::hasTable('user_filters')) {
+        if (! Schema::hasTable('user_filters')) {
             Schema::create('user_filters', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id');
@@ -38,7 +48,7 @@ return new class extends Migration
                 $table->json('sexes')->default(json_encode([]));
                 $table->json('genders')->default(json_encode([]));
                 $table->json('countries')->default(json_encode([]));
-                $table->integer('city')->nullable();
+                $table->json('cities')->default(json_encode([]));
                 $table->boolean('online')->nullable();
                 $table->json('keywords')->default(json_encode([]));
                 $table->string('username')->nullable();
@@ -47,22 +57,24 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('interests')) {
+        if (! Schema::hasTable('interests')) {
             Schema::create('interests', function (Blueprint $table) {
                 $table->id();
                 $table->integer('user_id');
                 $table->foreignId('interest_type_id');
+                $table->timestamps();
             });
         }
 
-        if (!Schema::hasTable('interest_types')) {
+        if (! Schema::hasTable('interest_types')) {
             Schema::create('interest_types', function (Blueprint $table) {
                 $table->id();
-                $table->string('name');
+                $table->string('label');
+                $table->timestamps();
             });
         }
 
-        if (!Schema::hasTable('settings')) {
+        if (! Schema::hasTable('settings')) {
             Schema::create('settings', function (Blueprint $table) {
                 $table->id();
                 $table->integer('minimum_age')->default(11);
@@ -71,25 +83,27 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('post_likes')) {
+        if (! Schema::hasTable('post_likes')) {
             Schema::create('post_likes', function (Blueprint $table) {
                 $table->id();
-                $table->string('post_id')->constrained()->onDelete('cascade');
+                $table->uuid('post_id');
                 $table->foreignId('user_id');
                 $table->timestamps();
             });
         }
 
-        if (!Schema::hasTable('post_comment_likes')) {
-            Schema::create('post_comment_likes', function (Blueprint $table) {
+        if (! Schema::hasTable('post_comment_reactions')) {
+            Schema::create('post_comment_reactions', function (Blueprint $table) {
                 $table->id();
                 $table->string('post_comment_id');
                 $table->foreignId('user_id');
+                $table->string('reaction');
+                $table->string('reaction_unicode');
                 $table->timestamps();
             });
         }
 
-        if (!Schema::hasTable('post_comment_replies')) {
+        if (! Schema::hasTable('post_comment_replies')) {
             Schema::create('post_comment_replies', function (Blueprint $table) {
                 $table->id();
                 $table->string('post_comment_id');
@@ -99,7 +113,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('friends')) {
+        if (! Schema::hasTable('friends')) {
             Schema::create('friends', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
@@ -109,7 +123,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('blocked_users')) {
+        if (! Schema::hasTable('blocked_users')) {
             Schema::create('blocked_users', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id');
@@ -119,23 +133,25 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('languages')) {
+        if (! Schema::hasTable('languages')) {
             Schema::create('languages', function (Blueprint $table) {
                 $table->id();
-                $table->integer('user_id');
+                $table->foreignId('user_id');
                 $table->foreignId('language_type_id');
+                $table->timestamps();
             });
         }
 
-        if (!Schema::hasTable('language_types')) {
+        if (! Schema::hasTable('language_types')) {
             Schema::create('language_types', function (Blueprint $table) {
                 $table->id();
                 $table->string('code');
                 $table->string('name');
+                $table->timestamps();
             });
         }
 
-        if (!Schema::hasTable('followers')) {
+        if (! Schema::hasTable('followers')) {
             Schema::create('followers', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id');
@@ -144,32 +160,32 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('sexuality_types')) {
+        if (! Schema::hasTable('sexuality_types')) {
             Schema::create('sexuality_types', function (Blueprint $table) {
                 $table->id();
-                $table->string('name');
+                $table->string('label');
             });
         }
 
-        if (!Schema::hasTable('countries')) {
+        if (! Schema::hasTable('countries')) {
             Schema::create('countries', function (Blueprint $table) {
                 $table->id();
-                $table->string('name');
-                $table->string('code');
+                $table->string('label');
+                $table->string('value');
                 $table->timestamps();
             });
         }
 
-        if (!Schema::hasTable('cities')) {
+        if (! Schema::hasTable('cities')) {
             Schema::create('cities', function (Blueprint $table) {
                 $table->id();
-                $table->string('name');
+                $table->string('label');
                 $table->foreignId('country_id');
                 $table->timestamps();
             });
         }
 
-        if (!Schema::hasTable('profile_comment_likes')) {
+        if (! Schema::hasTable('profile_comment_likes')) {
             Schema::create('profile_comment_likes', function (Blueprint $table) {
                 $table->id();
                 $table->string('profile_comment_id');
@@ -178,7 +194,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('user_reports')) {
+        if (! Schema::hasTable('user_reports')) {
             Schema::create('user_reports', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id');
@@ -188,7 +204,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('post_reports')) {
+        if (! Schema::hasTable('post_reports')) {
             Schema::create('post_reports', function (Blueprint $table) {
                 $table->id();
                 $table->string('post_id');
@@ -198,7 +214,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('post_report_reasons')) {
+        if (! Schema::hasTable('post_report_reasons')) {
             Schema::create('post_report_reasons', function (Blueprint $table) {
                 $table->id();
                 $table->integer('post_report_id');
@@ -206,14 +222,44 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('report_reasons')) {
+        if (! Schema::hasTable('post_image_assets')) {
+            Schema::create('post_image_assets', function (Blueprint $table) {
+                $table->id();
+                $table->uuid('post_id');
+                $table->string('path');
+                $table->string('url')->nullable();
+                $table->timestamps();
+            });
+        }
+
+        if (! Schema::hasTable('post_audio_assets')) {
+            Schema::create('post_audio_assets', function (Blueprint $table) {
+                $table->id();
+                $table->uuid('post_id');
+                $table->string('path');
+                $table->string('url')->nullable();
+                $table->timestamps();
+            });
+        }
+
+        if (! Schema::hasTable('post_comment_audio_assets')) {
+            Schema::create('post_comment_audio_assets', function (Blueprint $table) {
+                $table->id();
+                $table->uuid('post_comment_id');
+                $table->string('path');
+                $table->string('url');
+                $table->timestamps();
+            });
+        }
+
+        if (! Schema::hasTable('report_reasons')) {
             Schema::create('report_reasons', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
             });
         }
 
-        if (!Schema::hasTable('rooms')) {
+        if (! Schema::hasTable('rooms')) {
             Schema::create('rooms', function (Blueprint $table) {
                 $table->id();
                 $table->integer('hidden')->default(0);
@@ -224,7 +270,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('room_members')) {
+        if (! Schema::hasTable('room_members')) {
             Schema::create('room_members', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('room_id');
@@ -233,7 +279,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('room_message_reports')) {
+        if (! Schema::hasTable('room_message_reports')) {
             Schema::create('room_message_reports', function (Blueprint $table) {
                 $table->id();
                 $table->string('message_id');
@@ -243,7 +289,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('room_message_counts')) {
+        if (! Schema::hasTable('room_message_counts')) {
             Schema::create('room_message_counts', function (Blueprint $table) {
                 $table->id();
                 $table->string('user_id');
@@ -253,7 +299,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('room_message_report_reasons')) {
+        if (! Schema::hasTable('room_message_report_reasons')) {
             Schema::create('room_message_report_reasons', function (Blueprint $table) {
                 $table->id();
                 $table->integer('room_message_report_id');
@@ -261,29 +307,39 @@ return new class extends Migration
             });
         }
 
+        if (! Schema::hasTable('profile_pictures')) {
+            Schema::create('profile_pictures', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id');
+                $table->string('path');
+                $table->string('url');
+                $table->timestamps();
+            });
+        }
+
         $adminRole = Role::create([
             'name' => 'admin',
-            'guard_name' => 'web'
+            'guard_name' => 'web',
         ]);
 
         $moderatorRole = Role::create([
             'name' => 'moderator',
-            'guard_name' => 'web'
+            'guard_name' => 'web',
         ]);
 
         $roomOwnerRole = Role::create([
             'name' => 'room-owner',
-            'guard_name' => 'web'
+            'guard_name' => 'web',
         ]);
 
         Permission::create([
             'name' => 'view-user-reports',
-            'guard_name' => 'web'
+            'guard_name' => 'web',
         ]);
 
         Permission::create([
             'name' => 'can-moderate-room',
-            'guard_name' => 'web'
+            'guard_name' => 'web',
         ]);
 
         $adminRole->givePermissionTo('view-user-reports');
@@ -321,5 +377,7 @@ return new class extends Migration
         Schema::dropIfExists('room_members');
         Schema::dropIfExists('room_message_reports');
         Schema::dropIfExists('room_message_counts');
+        Schema::dropIfExists('profile_pictures');
+        Schema::dropIfExists('post_image_assets');
     }
 };

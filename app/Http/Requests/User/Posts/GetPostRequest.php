@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class GetPostRequest
- * @package App\Http\Requests\User\Posts
  */
 class GetPostRequest extends BaseRequest
 {
@@ -26,7 +25,7 @@ class GetPostRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer|exists:posts,id'
+            'id' => 'required|integer|exists:posts,id',
         ];
     }
 }

@@ -8,14 +8,9 @@ use App\Models\Room\Room;
 
 /**
  * Class RoomInfoService
- * @package App\Services\Chat\Room
  */
 class RoomInfoService
 {
-    /**
-     * @param GetChatRoomInfoRequest $request
-     * @return RoomInfoResource
-     */
     public function index(GetChatRoomInfoRequest $request): RoomInfoResource
     {
         $room = Room::find($request->id);

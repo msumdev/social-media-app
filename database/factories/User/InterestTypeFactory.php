@@ -2,8 +2,6 @@
 
 namespace Database\Factories\User;
 
-use App\Models\User\InterestType;
-use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\File;
 
@@ -19,10 +17,11 @@ class InterestTypeFactory extends Factory
      */
     public function definition(): array
     {
-        $interests = json_decode(File::get(database_path('data/interests.json')), true);
+        $interests = json_decode(File::get(resource_path('example_data/interest_types.json')), true);
+        $randomInterest = array_rand($interests, 1);
 
         return [
-            'name' => $interests[0]['name']
+            'label' => $interests[$randomInterest]['label'],
         ];
     }
 }

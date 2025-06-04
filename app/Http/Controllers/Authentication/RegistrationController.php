@@ -12,13 +12,9 @@ use Inertia\Response;
 
 class RegistrationController extends Controller
 {
-    public function __construct(private readonly RegistrationService $registrationService)
-    {
-
-    }
+    public function __construct(private readonly RegistrationService $registrationService) {}
 
     /**
-     * @param Request $request
      * @return RedirectResponse|\Inertia\Response
      */
     public function render(Request $request)
@@ -27,14 +23,13 @@ class RegistrationController extends Controller
             return redirect()->route('home');
         }
 
-        return Inertia::render('Auth/Registration');
+        return Inertia::render('Register/Registration');
     }
 
     /**
-     * @param RegistrationRequest $request
      * @return Response
      */
-    public function store(RegistrationRequest $request): Response
+    public function store(RegistrationRequest $request): RedirectResponse
     {
         return $this->registrationService->register($request);
     }

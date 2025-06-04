@@ -9,14 +9,9 @@ use App\Models\Room\RoomMessageReportReason;
 
 /**
  * Class RoomMessageReportService
- * @package App\Services\Chat
  */
 class RoomMessageReportService
 {
-    /**
-     * @param CreateMessageReportRequest $request
-     * @return RoomMessageReportResource
-     */
     public function create(CreateMessageReportRequest $request): RoomMessageReportResource
     {
         $report = RoomMessageReport::create([

@@ -1,18 +1,15 @@
 <?php
 
-
 namespace Chat;
 
 use App\Models\Room\Room;
-use App\Models\User\Friend;
-use App\Models\User\User;
 use App\Services\Chat\Room\RoomService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class ChatRoomTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseMigrations;
 
     public function test_unauthenticated_user_cannot_load_chat(): void
     {
@@ -35,7 +32,7 @@ class ChatRoomTest extends TestCase
         $this->actingAs($this->user);
 
         $rooms = Room::factory()->count(5)->create([
-            'type' => 'direct'
+            'type' => 'direct',
         ]);
 
         $rooms->each(function ($room) {
@@ -52,9 +49,9 @@ class ChatRoomTest extends TestCase
                     'name',
                     'type',
                     'archive',
-                    'members'
-                ]
-            ]
+                    'members',
+                ],
+            ],
         ]);
 
         $response->assertJsonCount(5, 'data');
@@ -65,7 +62,7 @@ class ChatRoomTest extends TestCase
         $this->actingAs($this->user);
 
         $rooms = Room::factory()->count(5)->create([
-            'type' => 'group'
+            'type' => 'group',
         ]);
 
         $rooms->each(function ($room) {
@@ -82,9 +79,9 @@ class ChatRoomTest extends TestCase
                     'name',
                     'type',
                     'archive',
-                    'members'
-                ]
-            ]
+                    'members',
+                ],
+            ],
         ]);
 
         $response->assertJsonCount(5, 'data');
@@ -94,7 +91,7 @@ class ChatRoomTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $roomService = new RoomService();
+        $roomService = new RoomService;
         $room = $roomService->create('direct', $this->user, []);
         $room->archive = true;
         $room->save();

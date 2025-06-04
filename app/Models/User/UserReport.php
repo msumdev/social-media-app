@@ -17,11 +17,6 @@ class UserReport extends Model
     protected $fillable = [
         'user_id',
         'reporter_id',
-        'reason'
+        'reason',
     ];
-
-    /**
-     * @var bool $timestamps
-     */
-    public $timestamps = false;
 }

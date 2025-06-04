@@ -15,8 +15,8 @@ class UserIsAuthenticated
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check()) {
-            return redirect()->route('login.render');
+        if (! auth()->check()) {
+            return redirect()->route('login');
         }
 
         return $next($request);

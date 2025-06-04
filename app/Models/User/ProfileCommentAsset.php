@@ -3,10 +3,10 @@
 namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use MongoDB\Laravel\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProfileCommentAsset extends Model
 {
@@ -19,27 +19,21 @@ class ProfileCommentAsset extends Model
      */
     protected $fillable = [
         'profile_comment_id',
-        'path'
+        'path',
     ];
 
     /**
      * @var string[]
      */
     protected $appends = [
-        'formatted_path'
+        'formatted_path',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function comment(): BelongsTo
     {
         return $this->belongsTo(ProfileComment::class, 'profile_comment_id');
     }
 
-    /**
-     * @return string
-     */
     public function getFormattedPathAttribute(): string
     {
         $month = date('m', strtotime($this->created_at));
@@ -48,18 +42,14 @@ class ProfileCommentAsset extends Model
         return "/audios/post-assets/{$year}/{$month}/{$this->path}";
     }
 
-    /**
-     * @param UploadedFile $uploadedAudio
-     * @return string
-     */
     public function createAudioFromData(UploadedFile $uploadedAudio): string
     {
         $currentMonth = date('n');
         $currentYear = date('Y');
 
-        $folder = public_path('audios/post-assets/' . $currentYear . '/' . $currentMonth);
+        $folder = public_path('audios/post-assets/'.$currentYear.'/'.$currentMonth);
 
-        if (!file_exists($folder)) {
+        if (! file_exists($folder)) {
             Storage::makeDirectory($folder);
         }
 

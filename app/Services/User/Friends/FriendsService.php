@@ -13,14 +13,9 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * Class FriendsService
- * @package App\Services\User\Friends
  */
 class FriendsService extends BaseService
 {
-    /**
-     * @param GetFriendsRequest $request
-     * @return JsonResponse
-     */
     public function getFriends(GetFriendsRequest $request): JsonResponse
     {
         $data = Auth::user()
@@ -35,10 +30,6 @@ class FriendsService extends BaseService
         return $this->success('Friends retrieved successfully', $friends);
     }
 
-    /**
-     * @param SendFriendRequestRequest $request
-     * @return JsonResponse
-     */
     public function sendFriendRequest(SendFriendRequestRequest $request): JsonResponse
     {
         $user = $request->user();
@@ -47,7 +38,7 @@ class FriendsService extends BaseService
             'friend_requests',
         ])->find($request->id);
 
-        if (!$friend) {
+        if (! $friend) {
             return $this->fail('User not found', null, 'info');
         }
 

@@ -22,7 +22,7 @@ class RoomMessageResource extends JsonResource
                 'id' => $this->user->id,
                 'first_name' => $this->user->first_name,
                 'username' => $this->user->username,
-                'profile_picture' => $this->user->profile_picture->url,
+                'profile_picture' => $this->user->profilePicture->url,
             ],
             'created_at' => $this->created_at->diffForHumans(),
         ];

@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class UpdateFiltersRequest
- * @package App\Http\Requests\User\Filters
  */
 class UpdateFiltersRequest extends BaseRequest
 {
@@ -39,7 +38,7 @@ class UpdateFiltersRequest extends BaseRequest
             'keywords' => 'sometimes|array',
             'interests' => 'sometimes|array',
             'interests.*' => 'sometimes|numeric|exists:interests,id',
-            'username' => 'nullable|string'
+            'username' => 'nullable|string',
         ];
     }
 }

@@ -13,7 +13,7 @@ class RoomMessageReport extends Model
     use HasFactory, HybridRelations;
 
     /**
-     * @var string $connection
+     * @var string
      */
     protected $connection;
 
@@ -36,10 +36,10 @@ class RoomMessageReport extends Model
     ];
 
     /**
-     * @var string[] $hidden
+     * @var string[]
      */
     protected $hidden = [
-        'pivot'
+        'pivot',
     ];
 
     /**
@@ -50,9 +50,6 @@ class RoomMessageReport extends Model
         return $this->belongsToMany(ReportReason::class, 'room_message_report_reasons', 'room_message_report_id', 'report_reason_id');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function message(): BelongsTo
     {
         return $this->belongsTo(RoomMessage::class);

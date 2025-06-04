@@ -15,14 +15,9 @@ use Illuminate\Http\JsonResponse;
 
 /**
  * Class FilterService
- * @package App\Services\User\Filters
  */
 class FilterService
 {
-    /**
-     * @param UpdateFiltersRequest $request
-     * @return JsonResponse
-     */
     public function updateFilters(UpdateFiltersRequest $request): JsonResponse
     {
         $user = $request->user();
@@ -43,7 +38,7 @@ class FilterService
                 'online' => $data['online'] ?? false,
                 'keywords' => $data['keywords'] ?? [],
                 'username' => $data['username'] ?? null,
-                'interests' => $data['interests'] ?? []
+                'interests' => $data['interests'] ?? [],
             ]);
         } else {
             $filters->update($request->validated());
@@ -51,14 +46,10 @@ class FilterService
 
         return response()->json([
             'success' => true,
-            'message' => 'Filters updated successfully'
+            'message' => 'Filters updated successfully',
         ]);
     }
 
-    /**
-     * @param int $id
-     * @return JsonResponse
-     */
     public function getCountry(int $id): JsonResponse
     {
         $country = Country::where('id', $id)->with(['cities'])->first();
@@ -66,14 +57,10 @@ class FilterService
         return response()->json([
             'success' => true,
             'message' => 'Countries fetched successfully',
-            'country' => $country
+            'country' => $country,
         ]);
     }
 
-    /**
-     * @param GetSearchSettingsRequest $request
-     * @return JsonResponse
-     */
     public function getSearchSettings(GetSearchSettingsRequest $request): JsonResponse
     {
         $settings = Settings::first();
@@ -87,7 +74,7 @@ class FilterService
                 'countries' => Country::all(),
                 'interests' => InterestType::all(),
                 'minimum_age' => $settings->minimum_age,
-                'maximum_age' => $settings->maximum_age
+                'maximum_age' => $settings->maximum_age,
             ],
             'values' => [
                 'age_from' => $filters->age_from ?? $settings->minimum_age,
@@ -101,7 +88,7 @@ class FilterService
                 'username' => $filters->username ?? null,
                 'interests' => InterestType::whereIn('id', ($filters) ? $filters->interests->toArray() : [])->get(),
             ],
-            'success' => true
+            'success' => true,
         ]);
     }
 }

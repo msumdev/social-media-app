@@ -10,18 +10,9 @@ class UserProfile extends Model
     use HasFactory;
 
     /**
-     * @var string $connection
+     * @var string
      */
     protected $connection = 'mongodb';
-
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-
-        if (app()->runningUnitTests()) {
-            $this->connection = 'mongodb_testing';
-        }
-    }
 
     /**
      * The attributes that are mass assignable.
@@ -29,27 +20,14 @@ class UserProfile extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'user',
+        'user_id',
         'description',
+        'status',
         'background_colour',
         'background_image',
         'user_info_background_colour',
         'user_info_text_colour',
-        'about_me_background_colour'
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = ['_id'];
-
-    /**
-     * @var string[] $casts
-     */
-    protected $casts = [
-        'updated_at' => 'datetime:Y-m-d H:i:s',
+        'about_me_background_colour',
     ];
 
     /**
@@ -57,6 +35,6 @@ class UserProfile extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class);
     }
 }

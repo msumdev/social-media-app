@@ -15,18 +15,18 @@ class SexualityType extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     /**
-     * @var bool $timestamps
+     * @var bool
      */
     public $timestamps = false;
 
     /**
-     * @var string[] $hidden
+     * @var string[]
      */
     public $hidden = [
-        'pivot'
+        'pivot',
     ];
 }

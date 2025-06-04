@@ -3,10 +3,10 @@
 namespace App\Http\Requests\User\ReportUser;
 
 use App\Http\Requests\BaseRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * Class CreateUserReportRequest
- * @package App\Http\Requests\User\ReportUser
  */
 class CreateUserReportRequest extends BaseRequest
 {
@@ -26,8 +26,19 @@ class CreateUserReportRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|exists:users,id',
+            'id' => [
+                'required',
+                'exists:users,id',
+                Rule::notIn([auth()->id()]),
+            ],
             'reason' => 'required|string',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'id.not_in' => 'You cannot report yourself',
         ];
     }
 }

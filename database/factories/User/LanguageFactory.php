@@ -2,9 +2,7 @@
 
 namespace Database\Factories\User;
 
-use App\Models\User\InterestType;
 use App\Models\User\LanguageType;
-use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,7 +19,6 @@ class LanguageFactory extends Factory
     {
         return [
             'language_type_id' => LanguageType::factory(),
-            'user_id' => null
         ];
     }
 }

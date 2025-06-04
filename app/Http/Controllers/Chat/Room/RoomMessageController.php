@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Chat\Message\CreateMessageRequest;
 use App\Http\Requests\Chat\Message\DeleteMessageRequest;
 use App\Http\Requests\Chat\Message\GetMessageRequest;
-use App\Http\Requests\Chat\Rooms\CreateChatRequest;
 use App\Http\Resources\Chat\Room\Message\RoomMessageResource;
 use App\Services\Chat\Room\RoomMessageService;
 use Illuminate\Http\JsonResponse;
@@ -14,28 +13,16 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 /**
  * Class ChatRoomMessageController
- * @package App\Http\Controllers\Chat
  */
 class RoomMessageController extends Controller
 {
-    public function __construct(private readonly RoomMessageService $chatRoomMessageService)
-    {
+    public function __construct(private readonly RoomMessageService $chatRoomMessageService) {}
 
-    }
-
-    /**
-     * @param GetMessageRequest $request
-     * @return AnonymousResourceCollection
-     */
     public function index(GetMessageRequest $request): AnonymousResourceCollection
     {
         return $this->chatRoomMessageService->index($request);
     }
 
-    /**
-     * @param CreateMessageRequest $request
-     * @return RoomMessageResource
-     */
     public function create(CreateMessageRequest $request): RoomMessageResource
     {
         $roomId = intval($request->id);
@@ -49,10 +36,6 @@ class RoomMessageController extends Controller
         );
     }
 
-    /**
-     * @param DeleteMessageRequest $request
-     * @return JsonResponse
-     */
     public function delete(DeleteMessageRequest $request): JsonResponse
     {
         return $this->chatRoomMessageService->delete($request);

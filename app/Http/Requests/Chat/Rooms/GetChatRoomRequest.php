@@ -7,7 +7,6 @@ use App\Models\Room\Room;
 
 /**
  * Class GetChatRoomsRequest
- * @package App\Http\Requests\Chat\Rooms
  */
 class GetChatRoomRequest extends BaseRequest
 {
@@ -34,14 +33,14 @@ class GetChatRoomRequest extends BaseRequest
                 function ($attribute, $value, $fail) {
                     $room = Room::find($value);
 
-                    if (!$room) {
+                    if (! $room) {
                         $fail('Room not found');
                     }
 
-                    if (!$room->members->contains('id', auth()->id())) {
+                    if (! $room->members->contains('id', auth()->id())) {
                         $fail('You are not a member of this room');
                     }
-                }
+                },
             ],
         ];
     }

@@ -12,7 +12,7 @@
         Thank you for registering with us. To complete your registration, please confirm your email address by clicking the button below:
     </p>
     <div style="text-align: center; margin: 30px 0;">
-        <a href="{{ route('registration.confirm', [$user->token]) }}" style="display: inline-block; background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+        <a href="{{ route('registration-confirmation.render', [$user->token]) }}" style="display: inline-block; background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
             Confirm Your Email
         </a>
     </div>

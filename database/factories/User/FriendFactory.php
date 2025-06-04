@@ -2,7 +2,6 @@
 
 namespace Database\Factories\User;
 
-use App\Models\User\InterestType;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

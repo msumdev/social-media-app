@@ -3,21 +3,16 @@
 namespace App\Services\User\Posts;
 
 use App\Http\Requests\User\Posts\GetPostLikesRequest;
-use App\Http\Requests\User\Posts\TogglePostLikeRequest;
+use App\Http\Resources\Post\PostLikeResource;
 use App\Models\Posts\Post;
 use App\Models\Posts\PostLike;
 use Illuminate\Http\JsonResponse;
 
 /**
  * Class PostLikeService
- * @package App\Services\User\Posts
  */
 class PostLikeService
 {
-    /**
-     * @param GetPostLikesRequest $request
-     * @return JsonResponse
-     */
     public function getLikes(GetPostLikesRequest $request): JsonResponse
     {
         $likes = PostLike::where('post_id', $request->id)->get();
@@ -25,35 +20,29 @@ class PostLikeService
         return response()->json($likes);
     }
 
-    /**
-     * @param TogglePostLikeRequest $request
-     * @return JsonResponse
-     */
-    public function toggle(TogglePostLikeRequest $request): JsonResponse
+    public function toggle(string $postId): PostLikeResource
     {
-        $postLike = PostLike::where('post_id', $request->id)
+        $postLike = PostLike::where('post_id', $postId)
             ->where('user_id', auth()->id())
-            ->get();
+            ->first();
 
-        if ($postLike->count() > 0) {
-            $postLike = PostLike::where('post_id', $request->id)
-                ->where('user_id', auth()->id())
-                ->first();
-
+        if ($postLike) {
             $postLike->delete();
         } else {
             PostLike::create([
-                'post_id' => $request->id,
-                'user_id' => auth()->id()
+                'post_id' => $postId,
+                'user_id' => auth()->id(),
             ]);
         }
 
-        $post = Post::where('_id', $request->id)->first();
+        $post = Post::find($postId);
 
-        return response()->json([
-            'like_count' => $post->like_count,
-            'liked_by_user' => $post->liked_by_user,
-            'likes' => $post->likes
-        ]);
+        return new PostLikeResource($post);
+
+        //        return response()->json([
+        //            'like_count' => $post->like_count,
+        //            'liked_by_user' => $post->liked_by_user,
+        //            'likes' => $post->likes,
+        //        ]);
     }
 }

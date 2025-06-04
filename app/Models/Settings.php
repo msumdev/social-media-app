@@ -10,7 +10,7 @@ class Settings extends Model
     use HasFactory;
 
     /**
-     * @var string $table
+     * @var string
      */
     protected $table = 'settings';
 
@@ -25,7 +25,7 @@ class Settings extends Model
     ];
 
     /**
-     * @var bool $timestamps
+     * @var bool
      */
     public $timestamps = false;
 }

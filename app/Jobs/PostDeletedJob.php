@@ -2,24 +2,16 @@
 
 namespace App\Jobs;
 
-use App\Models\Posts\Post;
 use App\Models\User\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\Log;
 
 class PostDeletedJob implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * @var string $postId
-     */
     private string $postId;
 
-    /**
-     * @var User $user
-     */
     private User $user;
 
     /**

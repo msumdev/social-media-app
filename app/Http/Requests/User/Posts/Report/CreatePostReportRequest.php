@@ -7,7 +7,6 @@ use App\Models\Posts\Post;
 
 /**
  * Class CreatePostReportRequest
- * @package App\Http\Requests\User\Posts
  */
 class CreatePostReportRequest extends BaseRequest
 {
@@ -30,11 +29,11 @@ class CreatePostReportRequest extends BaseRequest
             'id' => [
                 'required',
                 'string',
-                function($attribute, $value, $fail) {
-                    if (!Post::where('_id', $value)->exists()) {
+                function ($attribute, $value, $fail) {
+                    if (! Post::where('_id', $value)->exists()) {
                         $fail('The post does not exist.');
                     }
-                }
+                },
             ],
             'reasons' => 'required|array|exists:report_reasons,id',
             'description' => 'nullable|string|max:255',

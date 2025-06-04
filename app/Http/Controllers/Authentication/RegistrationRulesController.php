@@ -10,7 +10,6 @@ use Inertia\Inertia;
 class RegistrationRulesController extends Controller
 {
     /**
-     * @param Request $request
      * @return RedirectResponse|\Inertia\Response
      */
     public function render(Request $request)

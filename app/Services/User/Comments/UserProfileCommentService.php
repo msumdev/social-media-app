@@ -2,7 +2,6 @@
 
 namespace App\Services\User\Comments;
 
-use App\Facades\ElasticSearchServiceFacade;
 use App\Http\Requests\User\Comments\CreateUserProfileCommentRequest;
 use App\Http\Requests\User\Comments\DeleteUserProfileCommentRequest;
 use App\Http\Requests\User\Comments\GetUserProfileCommentRequest;
@@ -15,14 +14,9 @@ use Illuminate\Support\Str;
 
 /**
  * Class UserProfileCommentService
- * @package App\Services\User\Comments
  */
 class UserProfileCommentService
 {
-    /**
-     * @param GetUserProfileCommentRequest $request
-     * @return JsonResponse
-     */
     public function index(GetUserProfileCommentRequest $request): JsonResponse
     {
         $comments = ProfileComment::orderBy('created_at', 'desc')
@@ -32,13 +26,11 @@ class UserProfileCommentService
     }
 
     /**
-     * @param CreateUserProfileCommentRequest $request
-     * @return JsonResponse
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function create(CreateUserProfileCommentRequest $request): JsonResponse
     {
-        $sanitizationService = new SanitizationService();
+        $sanitizationService = new SanitizationService;
         $content = $sanitizationService->sanitize($request->get('content'));
 
         $audios = $request->file('audios') ?? [];
@@ -47,17 +39,17 @@ class UserProfileCommentService
             'user' => auth()->id(),
             'content' => $content,
             'hashtags' => $request->get('hashtags'),
-            'mentions' => $request->get('mentions')
+            'mentions' => $request->get('mentions'),
         ]);
 
         foreach ($audios as $audio) {
             $asset = Asset::create([
                 'profile_comment_id' => $comment->_id,
                 'type' => Asset::PROFILE_COMMENT_AUDIO,
-                'path' => sha1(Str::random(16))
+                'path' => sha1(Str::random(16)),
             ]);
 
-            Storage::disk('profile-comment-audios')->put($asset->path, $audio->get());
+            Storage::disk('profile-comment-audio')->put($asset->path, $audio->get());
         }
 
         return response()->json([
@@ -66,8 +58,6 @@ class UserProfileCommentService
     }
 
     /**
-     * @param DeleteUserProfileCommentRequest $request
-     * @return JsonResponse
      * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function destroy(DeleteUserProfileCommentRequest $request): JsonResponse
@@ -81,13 +71,11 @@ class UserProfileCommentService
         $assets = Asset::where('profile_comment_id', $comment->_id)->get();
 
         foreach ($assets as $asset) {
-            Storage::disk('profile-comment-audios')->delete($asset->path);
+            Storage::disk('profile-comment-audio')->delete($asset->path);
             $asset->delete();
         }
 
         $comment->delete();
-
-        ElasticSearchServiceFacade::refreshIndex(ProfileComment::getIndexName());
 
         return response()->json(['message' => 'Comment deleted']);
     }

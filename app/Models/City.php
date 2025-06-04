@@ -16,18 +16,9 @@ class City extends Model
      * @var array
      */
     protected $fillable = [
-        'country',
-        'name'
+        'label',
     ];
 
-    /**
-     * @var bool $timestamps
-     */
-    public $timestamps = false;
-
-    /**
-     * @return BelongsTo
-     */
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);

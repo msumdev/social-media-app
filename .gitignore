@@ -22,3 +22,9 @@ yarn-error.log
 public/images/*
 /.config
 public/audios
+coverage/
+public/post-audio
+public/post-comment-audio
+public/post-images
+public/profile-pictures
+public/profile-comment-audio

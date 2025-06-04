@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class GetInterestsRequest
- * @package App\Http\Requests\User\Interests
  */
 class GetInterestsRequest extends BaseRequest
 {

@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class CreateCommentReplyRequest
- * @package App\Http\Requests\User\Posts
  */
 class CreateCommentReplyRequest extends BaseRequest
 {

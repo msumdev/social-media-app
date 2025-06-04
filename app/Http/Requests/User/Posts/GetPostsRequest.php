@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class GetPostsRequest
- * @package App\Http\Requests\User\Posts
  */
 class GetPostsRequest extends BaseRequest
 {
@@ -27,7 +26,7 @@ class GetPostsRequest extends BaseRequest
     {
         return [
             'offset' => 'sometimes|integer',
-            'offsetLimit' => 'sometimes|boolean'
+            'offsetLimit' => 'sometimes|boolean',
         ];
     }
 }

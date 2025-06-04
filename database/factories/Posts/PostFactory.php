@@ -2,14 +2,17 @@
 
 namespace Database\Factories\Posts;
 
+use App\Models\Posts\Post;
+use App\Models\Posts\PostAudioAsset;
+use App\Models\Posts\PostComment;
+use App\Models\Posts\PostImageAsset;
+use App\Models\Posts\PostLike;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User\User>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Posts\Post>
  */
 class PostFactory extends Factory
 {
@@ -20,14 +23,51 @@ class PostFactory extends Factory
      */
     public function definition(): array
     {
-        $sentences = File::json(database_path('data/sentences.json'), true)["sentences"];
+        $sentences = File::json(resource_path('example_data/sentences.json'), true)['sentences'];
+        $hashtags = File::json(resource_path('example_data/hashtags.json'), true)['hashtags'];
 
         return [
-            '_id' => Str::random(24),
-            'user_id' => null,
             'content' => $this->faker->randomElement($sentences),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'hashtags' => $this->faker->randomElements($hashtags, rand(1, 6)),
+            'user_id' => User::factory(),
         ];
+    }
+
+    /**
+     * Configure any relationships while creating the post
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Post $post) {
+            $post->comments()->saveMany(
+                PostComment::factory()
+                    ->count(20)
+                    ->create([
+                        'post_id' => $post->id,
+                        'user_id' => $post->user->id,
+                    ])
+            );
+
+            $post->likes()->save(
+                PostLike::factory()
+                    ->create([
+                        'post_id' => $post->id,
+                    ])
+            );
+
+            $post->postAudioAssets()->save(
+                PostAudioAsset::factory()
+                    ->create([
+                        'post_id' => $post->id,
+                    ])
+            );
+
+            $post->postImageAssets()->save(
+                PostImageAsset::factory()
+                    ->create([
+                        'post_id' => $post->id,
+                    ])
+            );
+        });
     }
 }

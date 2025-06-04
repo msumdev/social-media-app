@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use HTMLPurifier;
 use HTMLPurifier_Config;
+use Illuminate\Support\ServiceProvider;
 
 class HTMLPurifierServiceProvider extends ServiceProvider
 {

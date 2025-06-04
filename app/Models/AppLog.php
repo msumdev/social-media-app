@@ -15,55 +15,39 @@ class AppLog extends Model
     const PROFILE_VIEW = 1;
 
     /**
+     * @var string
+     */
+    protected $connection = 'mongodb';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'user',
-        'profile',
+        'viewer_id',
+        'viewed_id',
         'ip_address',
         'user_agent',
-        'type'
+        'type',
     ];
 
     /**
-     * @var string[] $appends
+     * @var string[]
      */
     protected $appends = [
         'created_at_title',
-        'created_at_display'
+        'created_at_display',
     ];
 
-    /**
-     * @var string[] $with
-     */
-    protected $with = [
-        'profile'
-    ];
-
-    /**
-     * @var string[] $hidden
-     */
-    protected $hidden = [
-        'ip_address',
-        'user_agent'
-    ];
-
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user');
+        return $this->belongsTo(User::class, 'viewer_id');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function profile(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'profile');
+        return $this->belongsTo(User::class, 'viewed_id');
     }
 
     /**
@@ -80,16 +64,5 @@ class AppLog extends Model
     public function getCreatedAtDisplayAttribute()
     {
         return Carbon::parse($this->created_at)->diffForHumans();
-    }
-
-    /**
-     * @param array $options
-     * @return bool
-     */
-    public function save(array $options = [])
-    {
-        $this->setIndex('app-logs-' . date('Y-m'));
-
-        return parent::save($options);
     }
 }

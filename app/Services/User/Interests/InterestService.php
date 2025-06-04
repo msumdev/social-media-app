@@ -8,14 +8,9 @@ use Illuminate\Http\JsonResponse;
 
 /**
  * Class InterestService
- * @package App\Services\User\Interests
  */
 class InterestService
 {
-    /**
-     * @param GetInterestsRequest $request
-     * @return JsonResponse
-     */
     public function index(GetInterestsRequest $request): JsonResponse
     {
         $interests = InterestType::all();

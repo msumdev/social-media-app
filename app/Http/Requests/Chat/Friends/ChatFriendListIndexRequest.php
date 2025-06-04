@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class ChatFriendListIndexRequest
- * @package App\Http\Requests\Chat\Friends
  */
 class ChatFriendListIndexRequest extends BaseRequest
 {

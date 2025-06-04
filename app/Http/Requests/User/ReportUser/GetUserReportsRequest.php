@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 /**
  * Class GetUserReportsRequest
- * @package App\Http\Requests\User\ReportUser
  */
 class GetUserReportsRequest extends BaseRequest
 {

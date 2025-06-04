@@ -1,0 +1,14 @@
+[
+    {
+        "label": "Male",
+        "value": "M"
+    },
+    {
+        "label": "Female",
+        "value": "F"
+    },
+    {
+        "label": "Prefer not to say",
+        "value": "Neutral"
+    }
+]

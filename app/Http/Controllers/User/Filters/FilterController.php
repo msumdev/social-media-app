@@ -11,34 +11,18 @@ use Symfony\Component\HttpFoundation\Request;
 
 class FilterController extends Controller
 {
-    public function __construct(private readonly FilterService $filterService)
-    {
+    public function __construct(private readonly FilterService $filterService) {}
 
-    }
-
-    /**
-     * @param UpdateFiltersRequest $request
-     * @return JsonResponse
-     */
     public function updateFilters(UpdateFiltersRequest $request): JsonResponse
     {
         return $this->filterService->updateFilters($request);
     }
 
-    /**
-     * @param GetSearchSettingsRequest $request
-     * @return JsonResponse
-     */
     public function getSearchSettings(GetSearchSettingsRequest $request): JsonResponse
     {
         return $this->filterService->getSearchSettings($request);
     }
 
-    /**
-     * @param Request $request
-     * @param $id
-     * @return JsonResponse
-     */
     public function getCountry(Request $request, $id): JsonResponse
     {
         return $this->filterService->getCountry($id);

@@ -2,19 +2,14 @@
 
 namespace App\Models\User;
 
-use App\Models\Posts\Post;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class UserSetting extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +18,7 @@ class UserSetting extends Authenticatable
      */
     protected $fillable = [
         'user_id',
-        'render_media'
+        'render_media',
     ];
 
     /**
@@ -34,7 +29,7 @@ class UserSetting extends Authenticatable
     protected $hidden = [];
 
     /**
-     * @var string[] $casts
+     * @var string[]
      */
     protected $casts = [
         'updated_at' => 'datetime:Y-m-d H:i:s',

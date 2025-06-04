@@ -25,7 +25,7 @@ class PostDisliked implements ShouldBroadcast
             'like_count' => $post->like_count,
             'liked_by_user' => $post->liked_by_user,
             'dislike_count' => $post->dislike_count,
-            'disliked_by_user' => $post->disliked_by_user
+            'disliked_by_user' => $post->disliked_by_user,
         ];
     }
 
@@ -37,7 +37,7 @@ class PostDisliked implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('main')
+            new PrivateChannel('main'),
         ];
     }
 

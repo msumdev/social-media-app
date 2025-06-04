@@ -12,35 +12,25 @@ use Illuminate\Http\JsonResponse;
 
 class ReportUserController extends Controller
 {
-    public function __construct(private readonly ReportUserService $reportUserService)
-    {
+    public function __construct(private readonly ReportUserService $reportUserService) {}
 
-    }
-
-    /**
-     * @param GetUserReportsRequest $request
-     * @return JsonResponse
-     */
     public function index(GetUserReportsRequest $request): JsonResponse
     {
-        return $this->reportUserService->getReportsForUser($request);
+        return $this->reportUserService->getReports();
     }
 
-    /**
-     * @param GetReportReasonsRequest $request
-     * @return JsonResponse
-     */
     public function reasons(GetReportReasonsRequest $request): JsonResponse
     {
         return response()->json(ReportReason::all());
     }
 
-    /**
-     * @param CreateUserReportRequest $request
-     * @return JsonResponse
-     */
     public function create(CreateUserReportRequest $request): JsonResponse
     {
-        return $this->reportUserService->create($request);
+        $userId = $request->id;
+        $reportReason = $request->input('reason');
+
+        $report = $this->reportUserService->create($userId, $reportReason);
+
+        return response()->json($report);
     }
 }

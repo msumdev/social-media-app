@@ -3,7 +3,6 @@
 namespace App\Models\User;
 
 use App\Models\AppLog;
-use App\Models\Asset;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Gender;
@@ -11,6 +10,7 @@ use App\Models\Posts\Post;
 use App\Models\Sex;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -19,15 +19,14 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Redis;
 use Laravel\Sanctum\HasApiTokens;
 use MongoDB\Laravel\Eloquent\HybridRelations;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens, HasRoles, HybridRelations;
+    use HasApiTokens, HasFactory, HasRoles, HybridRelations, Notifiable;
 
     /**
-     * @var string $connection
+     * @var string
      */
     protected $connection;
 
@@ -44,7 +43,6 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'online',
         'first_name',
         'last_name',
         'username',
@@ -56,52 +54,21 @@ class User extends Authenticatable
         'gender_id',
         'sexuality_id',
         'registered',
-        'status',
-        'description',
-        'interests',
         'password',
         'last_registration_email_sent_at',
         'jwt_token',
         'jwt_token_expires_at',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
-        'remember_token',
-        'api_token',
-        'role',
-        'password_reset_token',
-        'token',
-        'password_reset_at',
-        'email_verified_at',
-        'created_at',
-        'updated_at'
+        'password',
+        'jwt_token',
     ];
 
     /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array<string, string>
-     */
-    public $with = [
-        'profile_picture'
-    ];
-
-    /**
-     * @var string[] $appends
+     * @var string[]
      */
     protected $appends = [];
-
-    /**
-     * @var string[] $casts
-     */
-    protected $casts = [
-        'updated_at' => 'datetime:Y-m-d H:i:s',
-    ];
 
     /**
      * Get the attributes that should be cast.
@@ -122,148 +89,98 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-    /**
-     * @return HasOne
-     */
-    public function country(): HasOne
+    public function country(): BelongsTo
     {
-        return $this->hasOne(Country::class, 'id', 'country_id');
+        return $this->belongsTo(Country::class);
     }
 
-    /**
-     * @return HasOne
-     */
-    public function city(): HasOne
+    public function city(): BelongsTo
     {
-        return $this->hasOne(City::class, 'id', 'city_id');
+        return $this->belongsTo(City::class);
     }
 
-    /**
-     * @return HasOne
-     */
-    public function filters(): HasOne
+    public function userFilter(): HasOne
     {
-        return $this->hasOne(UserFilter::class, 'user_id', 'id');
+        return $this->hasOne(UserFilter::class);
     }
 
-    /**
-     * @return BelongsToMany
-     */
-    public function interests(): BelongsToMany
+    public function interests(): HasMany
     {
-        return $this->belongsToMany(InterestType::class, 'interests', 'user', 'interest_type_id');
+        return $this->hasMany(Interest::class);
     }
 
-    /**
-     * @return BelongsToMany
-     */
-    public function languages(): BelongsToMany
+    public function languages(): HasMany
     {
-        return $this->belongsToMany(LanguageType::class, 'languages', 'user', 'language_type_id');
+        return $this->hasMany(Language::class);
     }
 
-    /**
-     * @return int
-     */
     public function getAgeAttribute(): int
     {
         return Carbon::parse($this->date_of_birth)->age;
     }
 
-    /**
-     * @return HasOne
-     */
-    public function profile_picture(): HasOne
+    public function profilePicture(): HasOne
     {
-        return $this->hasOne(Asset::class, 'user_id')->where('type', Asset::PROFILE_PICTURE);
+        return $this->hasOne(ProfilePicture::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, 'user', 'id');
     }
 
-
-    /**
-     * @return HasOne
-     */
-    public function profile(): HasOne
+    public function userProfile(): HasOne
     {
-        return $this->hasOne(UserProfile::class, 'user', 'id');
+        return $this->hasOne(UserProfile::class);
     }
 
-    /**
-     * @return HasOne
-     */
-    public function gender(): HasOne
+    public function gender(): BelongsTo
     {
-        return $this->hasOne(Gender::class, 'id', 'gender_id');
+        return $this->belongsTo(Gender::class);
     }
 
-    /**
-     * @return HasOne
-     */
-    public function sex(): HasOne
+    public function sex(): BelongsTo
     {
-        return $this->hasOne(Sex::class, 'id', 'sex_id');
+        return $this->belongsTo(Sex::class);
     }
 
-    /**
-     * @return HasOne
-     */
-    public function sexuality(): HasOne
+    public function sexuality(): BelongsTo
     {
-        return $this->hasOne(SexualityType::class, 'id', 'sexuality_id');
+        return $this->belongsTo(SexualityType::class);
     }
 
-    /**
-     * @return int
-     */
-    public function getFollowerCountAttribute(): int
-    {
-        return $this->followers()->count();
-    }
-
-    /**
-     * @return HasMany
-     */
     public function followers(): HasMany
     {
-        return $this->hasMany(Follower::class, 'user_id', 'id');
+        return $this->hasMany(Follower::class);
     }
 
-    /**
-     * @return HasOne
-     */
-    public function settings(): HasOne
+    public function userSetting(): HasOne
     {
-        return $this->hasOne(UserSetting::class, 'user_id', 'id');
+        return $this->hasOne(UserSetting::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function comments(): HasMany
     {
-        return $this->hasMany(ProfileComment::class, 'user', 'id');
+        return $this->hasMany(ProfileComment::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function logs(): HasMany
     {
-        return $this->hasMany(AppLog::class, 'user', 'id');
+        return $this->hasMany(AppLog::class);
     }
 
-    /**
-     * @return void
-     */
     public function updateActivity(): void
     {
-        Redis::set('user:' . $this->id . ':last_activity', now()->timestamp);
+        Redis::set('user:'.$this->id.':last_activity', now()->timestamp);
+    }
+
+    public function blockedUsers(): HasMany
+    {
+        return $this->hasMany(BlockedUser::class, 'user_id', 'id');
+    }
+
+    public function hasBlocked(User $user): bool
+    {
+        return BlockedUser::where('blocked_user_id', $user->id)->where('user_id', $this->id)->exists();
     }
 }

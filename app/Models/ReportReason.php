@@ -19,7 +19,7 @@ class ReportReason extends Model
     ];
 
     /**
-     * @var bool $timestamps
+     * @var bool
      */
     public $timestamps = false;
 }

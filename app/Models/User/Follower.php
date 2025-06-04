@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Follower extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -20,7 +20,7 @@ class Follower extends Authenticatable
      */
     protected $fillable = [
         'user_id',
-        'follower_id'
+        'follower_id',
     ];
 
     /**
@@ -42,26 +42,20 @@ class Follower extends Authenticatable
     public $with = [];
 
     /**
-     * @var string[] $appends
+     * @var string[]
      */
     protected $appends = [];
 
     /**
-     * @var string[] $casts
+     * @var string[]
      */
     protected $casts = [];
 
-    /**
-     * @return HasOne
-     */
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-    /**
-     * @return HasOne
-     */
     public function follower(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'follower_id');
